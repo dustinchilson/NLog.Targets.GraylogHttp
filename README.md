@@ -1,6 +1,6 @@
 # NLog.Targets.GraylogHttp
 
-This is a custom target for Nlog that pushes log messages to Graylog using the Http input. 
+This is a custom target for NLog that pushes log messages to Graylog using the Http input. 
 
 This library is heavily influenced by [EasyGelf](https://github.com/Pliner/EasyGelf)
 

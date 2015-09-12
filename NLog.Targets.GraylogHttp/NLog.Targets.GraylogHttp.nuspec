@@ -7,7 +7,7 @@
     <id>NLog.Targets.GraylogHttp</id>
     <version>0.0.1</version>
     <authors>Dustin Chilson</authors>
-    <description>Sample exists only to show a sample .nuspec file.</description>
+    <description>NLog target that pushes log messages to Graylog using the Http input</description>
     <language>en-US</language>
     <projectUrl>https://github.com/dustinchilson/NLog.Targets.GraylogHttp</projectUrl>
     <licenseUrl>https://github.com/dustinchilson/NLog.Targets.GraylogHttp/blob/master/LICENSE</licenseUrl>   
