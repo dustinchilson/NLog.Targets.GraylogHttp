@@ -1,0 +1,18 @@
+version: 0.0.{build}
+
+platform: Any CPU
+configuration: Release
+
+assembly_info:
+  patch: true
+  file: Source\Version.cs
+  assembly_version: "{version}"
+
+before_build:
+  nuget restore NLog.Targets.GraylogHttp.sln
+
+build:
+  parallel: true                
+  project: NLog.Targets.GraylogHttp.sln
+  verbosity: minimal
+  publish_nuget: true
