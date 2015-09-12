@@ -1,4 +1,5 @@
-# NLog.Targets.GraylogHttp
+# NLog.Targets.GraylogHttp [![Build status](https://ci.appveyor.com/api/projects/status/4g5uup3i6p4kx5tr/branch/master?svg=true)](https://ci.appveyor.com/project/dustinchilson/nlog-targets-grayloghttp/branch/master)
+
 
 This is a custom target for NLog that pushes log messages to Graylog using the Http input. 
 
