@@ -5,7 +5,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">  
   <metadata>
     <id>NLog.Targets.GraylogHttp</id>
-    <version>0.0.1</version>
+    <version>$version$</version>
     <authors>Dustin Chilson</authors>
     <description>NLog target that pushes log messages to Graylog using the Http input</description>
     <language>en-US</language>
