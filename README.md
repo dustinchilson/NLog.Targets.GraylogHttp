@@ -1,9 +1,19 @@
-# NLog.Targets.GraylogHttp [![Build status](https://ci.appveyor.com/api/projects/status/4g5uup3i6p4kx5tr/branch/master?svg=true)](https://ci.appveyor.com/project/dustinchilson/nlog-targets-grayloghttp/branch/master)
+# NLog.Targets.GraylogHttp 
+[![Build status](https://ci.appveyor.com/api/projects/status/4g5uup3i6p4kx5tr/branch/master?svg=true)](https://ci.appveyor.com/project/dustinchilson/nlog-targets-grayloghttp/branch/master)
+[![NuGet](https://img.shields.io/nuget/dt/NLog.Targets.GraylogHttp.svg)](https://www.nuget.org/packages/NLog.Targets.GraylogHttp)
+[![NuGet](https://img.shields.io/nuget/v/NLog.Targets.GraylogHttp.svg)](https://www.nuget.org/packages/NLog.Targets.GraylogHttp)
 
+This is a custom target for NLog that pushes log messages to [Graylog](https://www.graylog.org/) using the Http input. 
 
-This is a custom target for NLog that pushes log messages to Graylog using the Http input. 
+This library was influenced by [EasyGelf](https://github.com/Pliner/EasyGelf)
 
-This library is heavily influenced by [EasyGelf](https://github.com/Pliner/EasyGelf)
+## Installation
+
+This library is packaged as a nuget package available [here ](https://www.nuget.org/packages/NLog.Targets.GraylogHttp/)
+
+```
+Install-Package NLog.Targets.GraylogHttp
+```
 
 ## Usage
 
@@ -53,3 +63,7 @@ var e = new LogEventInfo(LogLevel.Fatal, "Test", "Test Message");
 e.Properties["test_prop"] = "test property";
 logger.Log(e);
 ```
+
+## References
+
+[Gelf Spec](https://www.graylog.org/resources/gelf/)
