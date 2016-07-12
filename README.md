@@ -2,6 +2,7 @@
 [![Build status](https://ci.appveyor.com/api/projects/status/4g5uup3i6p4kx5tr/branch/master?svg=true)](https://ci.appveyor.com/project/dustinchilson/nlog-targets-grayloghttp/branch/master)
 [![NuGet](https://img.shields.io/nuget/dt/NLog.Targets.GraylogHttp.svg)](https://www.nuget.org/packages/NLog.Targets.GraylogHttp)
 [![NuGet](https://img.shields.io/nuget/v/NLog.Targets.GraylogHttp.svg)](https://www.nuget.org/packages/NLog.Targets.GraylogHttp)
+[![Dependency Status](https://dependencyci.com/github/dustinchilson/NLog.Targets.GraylogHttp/badge)](https://dependencyci.com/github/dustinchilson/NLog.Targets.GraylogHttp)
 
 This is a custom target for NLog that pushes log messages to [Graylog](https://www.graylog.org/) using the Http input. 
 
