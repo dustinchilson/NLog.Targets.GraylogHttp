@@ -1,35 +1,45 @@
+version: 0.1.{build}
 configuration: Release
 platform: Any CPU
 image: Visual Studio 2017
 
-init:
-  # Set "build version number" to "short-commit-hash" or when tagged to "tag name" (Travis style)
-  - ps: >-
-      if ($env:APPVEYOR_REPO_TAG -eq "true")
-      {
-        Update-AppveyorBuild -Version "$env:APPVEYOR_REPO_TAG_NAME"
-      }
-      else
-      {
-        Update-AppveyorBuild -Version "dev-$($env:APPVEYOR_REPO_COMMIT.substring(0,7))"
-      }
+#branches:  
+#  only:
+#  - master
+
+pull_requests:  
+  do_not_increment_build_number: true
+  
+nuget:  
+  disable_publish_on_pr: true
 
 before_build:
-  nuget restore NLog.Targets.GraylogHttp.sln
+  dotnet restore
 
 build:
-  project: NLog.Targets.GraylogHttp.sln
-  publish_nuget: true
-  publish_nuget_symbols: true
+  project: src\NLog.Targets.GraylogHttp\NLog.Targets.GraylogHttp.csproj
   parallel: true
   verbosity: minimal
 
 after_build:
-  - ps: Get-ChildItem .\*.nupkg | % { Push-AppveyorArtifact $_.FullName -FileName $_.Name }
+  dotnet pack /p:PackageVersion=$env:APPVEYOR_BUILD_VERSION ..\src\NLog.Targets.GraylogHttp\NLog.Targets.GraylogHttp.csproj -c Release -o ..\artifacts 
+
+artifacts:  
+- path: .\artifacts\**\*.nupkg
+  name: NuGet
 
 deploy:
 - provider: NuGet
+  server: https://www.myget.org/F/dustinchilson/api/v2/package
+  api_key:
+    secure: Lq1Lch/xLidfauJ3bxyQYjlsseAFO5rIIlYuWxJMJDaCShDWqbFeqDOLVrLQMFSe
+  skip_symbols: true
   on:
     branch: master
+- provider: NuGet
+  name: production
+  on:
+    branch: master
+    appveyor_repo_tag: true
   api_key:
     secure: OevGaxGEhut0e3EXmzfBfihKqCn5J2Y/Og4ggvxI6I6fP5wvSwdwOjMLtreve7NN
