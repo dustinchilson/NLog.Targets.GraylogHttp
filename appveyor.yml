@@ -3,10 +3,6 @@ configuration: Release
 platform: Any CPU
 image: Visual Studio 2017
 
-#branches:  
-#  only:
-#  - master
-
 pull_requests:  
   do_not_increment_build_number: true
   
@@ -15,13 +11,13 @@ nuget:
 
 init:
   - ps: >-
-    if ($env:APPVEYOR_REPO_BRANCH -ne "master")
-    {
-      Update-AppveyorBuild -Version "$($env:APPVEYOR_REPO_COMMIT.substring(0,7))"
-    }
+      if ($env:APPVEYOR_REPO_BRANCH -ne "master")
+      {
+        Update-AppveyorBuild -Version "$($env:APPVEYOR_REPO_COMMIT.substring(0,7))"
+      }
 
 before_build:
-    dotnet restore src\NLog.Targets.GraylogHttp\NLog.Targets.GraylogHttp.csproj
+  - ps: dotnet restore src\NLog.Targets.GraylogHttp\NLog.Targets.GraylogHttp.csproj
 
 build:
   project: src\NLog.Targets.GraylogHttp\NLog.Targets.GraylogHttp.csproj
@@ -29,7 +25,7 @@ build:
   verbosity: minimal
 
 after_build:
-    dotnet pack /p:PackageVersion=$env:APPVEYOR_BUILD_VERSION src\NLog.Targets.GraylogHttp\NLog.Targets.GraylogHttp.csproj -c Release -o ..\artifacts 
+  - ps: dotnet pack /p:PackageVersion=$env:APPVEYOR_BUILD_VERSION src\NLog.Targets.GraylogHttp\NLog.Targets.GraylogHttp.csproj -c Release -o ..\artifacts 
 
 artifacts:  
 - path: .\artifacts\**\*.nupkg
