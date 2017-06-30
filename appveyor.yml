@@ -12,7 +12,11 @@ nuget:
 init:
   - ps: .\tools\init.ps1
 
+install:
+  - cmd: git submodule -q update --init
+
 before_build:
+  - ps: .\tools\appveyor\scripts\update-build-version.ps1
   - ps: .\tools\before_build.ps1
 
 build:
