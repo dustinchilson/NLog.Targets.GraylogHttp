@@ -14,7 +14,7 @@ nuget:
   disable_publish_on_pr: true
 
 before_build:
-  dotnet restore
+  dotnet restore src\NLog.Targets.GraylogHttp\NLog.Targets.GraylogHttp.csproj
 
 build:
   project: src\NLog.Targets.GraylogHttp\NLog.Targets.GraylogHttp.csproj
