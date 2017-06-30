@@ -21,7 +21,6 @@ init:
     }
 
 before_build:
-  - ps: >-
     dotnet restore src\NLog.Targets.GraylogHttp\NLog.Targets.GraylogHttp.csproj
 
 build:
