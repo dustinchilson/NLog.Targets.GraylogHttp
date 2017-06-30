@@ -13,6 +13,13 @@ pull_requests:
 nuget:  
   disable_publish_on_pr: true
 
+init:
+  - ps: >-
+      if ($env:APPVEYOR_REPO_BRANCH -ne "master")
+      {
+        Update-AppveyorBuild -Version "$($env:APPVEYOR_REPO_COMMIT.substring(0,7))"
+      }
+
 before_build:
   dotnet restore src\NLog.Targets.GraylogHttp\NLog.Targets.GraylogHttp.csproj
 
@@ -22,7 +29,7 @@ build:
   verbosity: minimal
 
 after_build:
-  dotnet pack /p:PackageVersion=$env:APPVEYOR_BUILD_VERSION ..\src\NLog.Targets.GraylogHttp\NLog.Targets.GraylogHttp.csproj -c Release -o ..\artifacts 
+  dotnet pack /p:PackageVersion=$env:APPVEYOR_BUILD_VERSION src\NLog.Targets.GraylogHttp\NLog.Targets.GraylogHttp.csproj -c Release -o ..\artifacts 
 
 artifacts:  
 - path: .\artifacts\**\*.nupkg
