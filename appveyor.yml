@@ -24,6 +24,9 @@ build:
   parallel: true
   verbosity: minimal
 
+after_build:
+  - ps: Get-ChildItem .\*.nupkg | % { Push-AppveyorArtifact $_.FullName -FileName $_.Name }
+
 deploy:
 - provider: NuGet
   on:
