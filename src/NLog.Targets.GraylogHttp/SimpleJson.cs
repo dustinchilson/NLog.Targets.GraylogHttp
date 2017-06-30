@@ -40,7 +40,7 @@
 
 // NOTE: uncomment the following line if you are compiling under Window Metro style application/library.
 // usually already defined in properties
-//#define NETFX_CORE;
+#define NETFX_CORE
 
 // If you are targetting WinStore, WP8 and NET4.5+ PCL make sure to #define SIMPLE_JSON_TYPEINFO;
 

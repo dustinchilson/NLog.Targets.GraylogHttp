@@ -1,0 +1,9 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>netstandard1.3</TargetFramework>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="NLog" Version="5.0.0-beta09" />
+    <PackageReference Include="SimpleJson" Version="0.38.0" />
+  </ItemGroup>
+</Project>
