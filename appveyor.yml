@@ -1,6 +1,6 @@
-version: 0.0.{build}
 configuration: Release
 platform: Any CPU
+image: Visual Studio 2017
 
 assembly_info:
   patch: true
@@ -8,6 +8,18 @@ assembly_info:
   assembly_version: '{version}'
   assembly_file_version: '{version}'
   assembly_informational_version: '{version}'
+
+init:
+  # Set "build version number" to "short-commit-hash" or when tagged to "tag name" (Travis style)
+  - ps: >-
+      if ($env:APPVEYOR_REPO_TAG -eq "true")
+      {
+        Update-AppveyorBuild -Version "$env:APPVEYOR_REPO_TAG_NAME"
+      }
+      else
+      {
+        Update-AppveyorBuild -Version "dev-$($env:APPVEYOR_REPO_COMMIT.substring(0,7))"
+      }
 
 before_build:
   nuget restore NLog.Targets.GraylogHttp.sln
@@ -21,5 +33,7 @@ build:
 
 deploy:
 - provider: NuGet
+  on:
+    branch: master
   api_key:
     secure: OevGaxGEhut0e3EXmzfBfihKqCn5J2Y/Og4ggvxI6I6fP5wvSwdwOjMLtreve7NN
