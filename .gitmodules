@@ -1,3 +1,0 @@
-[submodule "tools/appveyor"]
-	path = tools/appveyor
-	url = https://github.com/vtex/appveyor-scripts.git

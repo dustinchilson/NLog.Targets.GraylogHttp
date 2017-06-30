@@ -9,11 +9,14 @@ pull_requests:
 nuget:  
   disable_publish_on_pr: true
 
-install:
-  - cmd: git submodule -q update --init
+init:
+  - ps: >-
+      if ($env:APPVEYOR_REPO_BRANCH -ne "master")
+      {
+        Update-AppveyorBuild -Version "$($env:APPVEYOR_BUILD_VERSION)-pre$($env:APPVEYOR_REPO_COMMIT.substring(0,7))"
+      }
 
 before_build:
-  - ps: .\tools\appveyor\scripts\update-build-version.ps1
   - ps: .\tools\before_build.ps1
 
 build:
