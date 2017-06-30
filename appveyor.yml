@@ -22,13 +22,12 @@ before_build:
 build:
   project: src\NLog.Targets.GraylogHttp\NLog.Targets.GraylogHttp.csproj
   parallel: true
-  verbosity: minimal
 
 after_build:
   - ps: .\tools\after_build.ps1
 
 artifacts:  
-- path: .\artifacts\**\*.nupkg
+- path: .\src\NLog.Targets.GraylogHttp\artifacts\**\*.nupkg
   name: NuGet
 
 deploy:
@@ -36,13 +35,9 @@ deploy:
   server: https://www.myget.org/F/dustinchilson/api/v2/package
   api_key:
     secure: Lq1Lch/xLidfauJ3bxyQYjlsseAFO5rIIlYuWxJMJDaCShDWqbFeqDOLVrLQMFSe
-  skip_symbols: true
-  on:
-    branch: master
 - provider: NuGet
   name: production
   on:
     branch: master
-    appveyor_repo_tag: true
   api_key:
     secure: OevGaxGEhut0e3EXmzfBfihKqCn5J2Y/Og4ggvxI6I6fP5wvSwdwOjMLtreve7NN
