@@ -50,3 +50,4 @@ Ankh.NoLoad
 !/packages/*/lib/*.dll
 !/packages/*/lib/*/*.dll
 /Packages
+/.vs/NLog.Targets.GraylogHttp/v15/Server/sqlite3
