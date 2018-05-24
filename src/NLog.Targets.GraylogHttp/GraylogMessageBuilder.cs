@@ -12,7 +12,7 @@ namespace NLog.Targets.GraylogHttp
         internal GraylogMessageBuilder(Func<int> timestampGenerator = null)
         {
             if (timestampGenerator == null)
-                timestampGenerator = () => (int) (DateTime.UtcNow - new DateTime(1970, 1, 1)).TotalSeconds;
+                timestampGenerator = () => (int)(DateTime.UtcNow - new DateTime(1970, 1, 1)).TotalSeconds;
 
             _timestampGenerator = timestampGenerator;
         }
@@ -32,7 +32,7 @@ namespace NLog.Targets.GraylogHttp
             else
                 graylogLevel = level == LogLevel.Warn ? GelfLevel.Warning : GelfLevel.Error;
 
-            return this.WithProperty("level", (int)graylogLevel);
+            return WithProperty("level", (int)graylogLevel);
         }
 
         public GraylogMessageBuilder WithProperty(string propertyName, object value)
@@ -45,7 +45,7 @@ namespace NLog.Targets.GraylogHttp
 
         public GraylogMessageBuilder WithCustomProperty(string propertyName, object value)
         {
-            return this.WithProperty($"_{propertyName}", value);
+            return WithProperty($"_{propertyName}", value);
         }
 
         public GraylogMessageBuilder WithCustomPropertyRange(Dictionary<string, string> properties)
@@ -55,8 +55,8 @@ namespace NLog.Targets.GraylogHttp
 
         public string Render()
         {
-            this.WithProperty("timestamp", _timestampGenerator());
-            this.WithProperty("version", "1.1");
+            WithProperty("timestamp", _timestampGenerator());
+            WithProperty("version", "1.1");
 
             return _graylogMessage.ToString();
         }

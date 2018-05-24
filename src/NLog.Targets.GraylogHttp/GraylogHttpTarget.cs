@@ -13,8 +13,8 @@ namespace NLog.Targets.GraylogHttp
     {
         public GraylogHttpTarget()
         {
-            this.Host = Environment.GetEnvironmentVariable("COMPUTERNAME") ?? Environment.GetEnvironmentVariable("HOSTNAME");
-            this.Parameters = new List<GraylogParameterInfo>();
+            Host = Environment.GetEnvironmentVariable("COMPUTERNAME") ?? Environment.GetEnvironmentVariable("HOSTNAME");
+            Parameters = new List<GraylogParameterInfo>();
         }
 
         [RequiredParameter]
@@ -34,15 +34,15 @@ namespace NLog.Targets.GraylogHttp
         protected override void Write(LogEventInfo logEvent)
         {
             GraylogMessageBuilder messageBuilder = new GraylogMessageBuilder()
-                .WithCustomProperty("facility", this.Facility)
+                .WithCustomProperty("facility", Facility)
                 .WithProperty("short_message", logEvent.Message)
-                .WithProperty("host", this.Host)
+                .WithProperty("host", Host)
                 .WithLevel(logEvent.Level)
                 .WithCustomProperty("logger_name", logEvent.LoggerName);
 
-            if (this.Parameters != null && this.Parameters.Any())
+            if (Parameters != null && Parameters.Any())
             {
-                Dictionary<string, string> paramsDictionary = this.Parameters
+                Dictionary<string, string> paramsDictionary = Parameters
                     .Select(p => new KeyValuePair<string, string>(p.Name, p.Layout.Render(logEvent)))
                     .ToDictionary(pair => pair.Key, pair => pair.Value);
 
@@ -59,9 +59,9 @@ namespace NLog.Targets.GraylogHttp
 
             using (var httpClient = new HttpClient())
             {
-                httpClient.BaseAddress = new Uri(string.Format("{0}:{1}/gelf", this.GraylogServer, this.GraylogPort));
+                httpClient.BaseAddress = new Uri($"{GraylogServer}:{GraylogPort}/gelf");
                 httpClient.DefaultRequestHeaders.ExpectContinue = false; // Expect (100) Continue breaks the graylog server
-                HttpResponseMessage httpResponseMessage = httpClient.PostAsync("", new StringContent(messageBuilder.Render(), Encoding.UTF8, "application/json")).Result;
+                HttpResponseMessage httpResponseMessage = httpClient.PostAsync(new Uri(string.Empty), new StringContent(messageBuilder.Render(), Encoding.UTF8, "application/json")).Result;
             }
         }
     }

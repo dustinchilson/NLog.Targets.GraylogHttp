@@ -21,9 +21,16 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "netFx", "netFx", "{E122A2B9
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NLogGraylogHttp.Example.NetCore", "examples\netcore\NLogGraylogHttp.Example.NetCore\NLogGraylogHttp.Example.NetCore.csproj", "{1DFD66DF-27C7-414F-AFD9-CCE1E8AD7327}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NLogGraylogHttp.Example.NetFx", "examples\netFx\NLogGraylogHttp.Example.NetFx\NLogGraylogHttp.Example.NetFx.csproj", "{DABBDCD0-4B31-446D-8837-CA42C9E397EF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NLogGraylogHttp.Example.NetFx", "examples\netFx\NLogGraylogHttp.Example.NetFx\NLogGraylogHttp.Example.NetFx.csproj", "{DABBDCD0-4B31-446D-8837-CA42C9E397EF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NLog.Targets.GraylogHttp.Tests", "src\NLog.Targets.GraylogHttp.Tests\NLog.Targets.GraylogHttp.Tests.csproj", "{B48C64AA-0A97-4369-AF82-DF2B40CC6C37}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NLog.Targets.GraylogHttp.Tests", "src\NLog.Targets.GraylogHttp.Tests\NLog.Targets.GraylogHttp.Tests.csproj", "{B48C64AA-0A97-4369-AF82-DF2B40CC6C37}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tools", "Tools", "{3DCBA687-D8B3-4F03-99F6-D1F446FB0590}"
+	ProjectSection(SolutionItems) = preProject
+		tools\after_build.ps1 = tools\after_build.ps1
+		tools\before_build.ps1 = tools\before_build.ps1
+		tools\init.ps1 = tools\init.ps1
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

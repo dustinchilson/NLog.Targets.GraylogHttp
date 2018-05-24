@@ -1,0 +1,14 @@
+<Project>
+ <PropertyGroup>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors> 
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <GenerateBindingRedirectsOutputType>true</GenerateBindingRedirectsOutputType>
+    <SkipValidatePackageReferences>true</SkipValidatePackageReferences>
+    <CodeAnalysisRuleSet>$(SolutionDir)tools\SA.ruleset</CodeAnalysisRuleSet>
+ </PropertyGroup>
+
+ <ItemGroup>
+    <AdditionalFiles Include="$(SolutionDir)tools\stylecop.json" />
+ </ItemGroup>
+
+</Project>
