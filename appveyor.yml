@@ -20,7 +20,7 @@ before_build:
   - ps: .\tools\before_build.ps1
 
 build:
-  project: src\NLog.Targets.GraylogHttp\NLog.Targets.GraylogHttp.csproj
+  project: .\NLog.Targets.GraylogHttp.sln
   parallel: true
 
 after_build:
