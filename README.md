@@ -16,6 +16,10 @@ This library is packaged as a nuget package available [here ](https://www.nuget.
 Install-Package NLog.Targets.GraylogHttp
 ```
 
+## NetStandard & .net Core
+
+This library runs under netstandard 1.3 and fully supports both netstandard and .net Core.
+
 ## Usage
 
 Add or modify your NLog Configuration to add the new target and Extension Assembily.

@@ -13,7 +13,7 @@ namespace NLog.Targets.GraylogHttp
     {
         public GraylogHttpTarget()
         {
-            this.Host = Environment.MachineName;
+            this.Host = Environment.GetEnvironmentVariable("COMPUTERNAME") ?? Environment.GetEnvironmentVariable("HOSTNAME");
             this.Parameters = new List<GraylogParameterInfo>();
         }
 

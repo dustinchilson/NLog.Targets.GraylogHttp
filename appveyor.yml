@@ -1,25 +1,43 @@
-version: 0.0.{build}
+version: 0.1.{build}
 configuration: Release
 platform: Any CPU
+image: Visual Studio 2017
 
-assembly_info:
-  patch: true
-  file: '**\AssemblyInfo.*'
-  assembly_version: '{version}'
-  assembly_file_version: '{version}'
-  assembly_informational_version: '{version}'
+pull_requests:  
+  do_not_increment_build_number: true
+  
+nuget:  
+  disable_publish_on_pr: true
+
+init:
+  - ps: >-
+      if ($env:APPVEYOR_REPO_BRANCH -ne "master")
+      {
+        Update-AppveyorBuild -Version "$($env:APPVEYOR_BUILD_VERSION)-pre$($env:APPVEYOR_REPO_COMMIT.substring(0,7))"
+      }
 
 before_build:
-  nuget restore NLog.Targets.GraylogHttp.sln
+  - ps: .\tools\before_build.ps1
 
 build:
-  project: NLog.Targets.GraylogHttp.sln
-  publish_nuget: true
-  publish_nuget_symbols: true
+  project: src\NLog.Targets.GraylogHttp\NLog.Targets.GraylogHttp.csproj
   parallel: true
-  verbosity: minimal
+
+after_build:
+  - ps: .\tools\after_build.ps1
+
+artifacts:  
+- path: .\src\NLog.Targets.GraylogHttp\artifacts\**\*.nupkg
+  name: NuGet
 
 deploy:
 - provider: NuGet
+  server: https://www.myget.org/F/dustinchilson/api/v2/package
+  api_key:
+    secure: Lq1Lch/xLidfauJ3bxyQYjlsseAFO5rIIlYuWxJMJDaCShDWqbFeqDOLVrLQMFSe
+- provider: NuGet
+  name: production
+  on:
+    branch: master
   api_key:
     secure: OevGaxGEhut0e3EXmzfBfihKqCn5J2Y/Og4ggvxI6I6fP5wvSwdwOjMLtreve7NN
