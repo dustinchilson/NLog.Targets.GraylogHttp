@@ -14,11 +14,12 @@ namespace NLogGraylogHttp.Example.NetCore
                 .AddLogging()
                 .BuildServiceProvider();
 
+            LogManager.LoadConfiguration("NLog.config");
+
             serviceProvider
                 .GetService<ILoggerFactory>()
-                .AddNLog()
-                .ConfigureNLog("NLog.config");
-
+                .AddNLog();
+            
             var logger = serviceProvider.GetService<ILoggerFactory>().CreateLogger<Program>();
             var nLogLogger = LogManager.GetCurrentClassLogger();
 
