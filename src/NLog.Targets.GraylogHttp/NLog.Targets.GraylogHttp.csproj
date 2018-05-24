@@ -1,6 +1,13 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>netstandard1.3</TargetFramework>
+    <TargetFramework>netstandard1.3</TargetFramework>   
+  </PropertyGroup>
+  <PropertyGroup>
+    <PackageVersion>0.0.0</PackageVersion>
+    <Authors>Dustin Chilson</Authors>
+    <Description>NLog target that pushes log messages to Graylog using the Http input</Description>
+    <PackageProjectUrl>https://github.com/dustinchilson/NLog.Targets.GraylogHttp</PackageProjectUrl>
+    <PackageLicenseUrl>https://github.com/dustinchilson/NLog.Targets.GraylogHttp/blob/master/LICENSE</PackageLicenseUrl>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
     <DocumentationFile>bin\Release\netstandard1.3\NLog.Targets.GraylogHttp.xml</DocumentationFile>

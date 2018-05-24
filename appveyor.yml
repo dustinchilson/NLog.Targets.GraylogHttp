@@ -9,6 +9,11 @@ pull_requests:
 nuget:  
   disable_publish_on_pr: true
 
+dotnet_csproj:
+  patch: true
+  file: '**\*.csproj'
+  package_version: '{version}'
+
 init:
   - ps: >-
       if ($env:APPVEYOR_REPO_BRANCH -ne "master")
