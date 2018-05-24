@@ -3,6 +3,7 @@
     <TargetFramework>net471</TargetFramework>
     <Configurations>Debug;Release</Configurations>
     <OutputType>Exe</OutputType>
+    <IsPackable>false</IsPackable>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
     <DocumentationFile>bin\Release\net471\NLogGraylogHttp.Example.NetFx.xml</DocumentationFile>
