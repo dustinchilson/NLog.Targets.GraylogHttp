@@ -27,11 +27,9 @@ before_build:
 build:
   project: .\NLog.Targets.GraylogHttp.sln
   parallel: true
-  publish_nuget: true
-  publish_nuget_symbols: true
 
-#after_build:
-#  - ps: .\tools\after_build.ps1
+after_build:
+  - ps: .\tools\after_build.ps1
 
 artifacts:  
 - path: .\src\NLog.Targets.GraylogHttp\artifacts\**\*.nupkg
