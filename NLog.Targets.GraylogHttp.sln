@@ -8,11 +8,14 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Misc", "Misc", "{7970F18F-82A6-4B1C-B2D0-00F440E949F4}"
 	ProjectSection(SolutionItems) = preProject
 		.gitignore = .gitignore
+		after.NLog.Targets.GraylogHttp.sln.targets = after.NLog.Targets.GraylogHttp.sln.targets
 		appveyor.yml = appveyor.yml
+		build.cake = build.cake
 		Directory.Build.props = Directory.Build.props
-		global.json = global.json
 		LICENSE = LICENSE
 		README.md = README.md
+		SA.ruleset = SA.ruleset
+		stylecop.json = stylecop.json
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Examples", "Examples", "{13E9D02A-75C8-45FA-B4EB-574279022C3C}"
