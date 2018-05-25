@@ -2,6 +2,7 @@
 // ARGUMENTS
 var target = Argument("target", "Default");
 var configuration = Argument("configuration", "Release");
+var platform = Argument("platform", "Any CPU");
 var skipTests = Argument("SkipTests", false);
 
 // Variables
@@ -57,8 +58,7 @@ Task("Test")
     {
 		var settings = new DotNetCoreTestSettings
 		{
-			Configuration = configuration,
-			NoBuild = true
+			Configuration = configuration
 		};
 		DotNetCoreTest("./src/NLog.Targets.GraylogHttp.Tests/NLog.Targets.GraylogHttp.Tests.csproj", settings);
     });
