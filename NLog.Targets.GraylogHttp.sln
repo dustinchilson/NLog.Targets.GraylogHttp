@@ -27,16 +27,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NLogGraylogHttp.Example.Net
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NLog.Targets.GraylogHttp.Tests", "src\NLog.Targets.GraylogHttp.Tests\NLog.Targets.GraylogHttp.Tests.csproj", "{B48C64AA-0A97-4369-AF82-DF2B40CC6C37}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tools", "Tools", "{3DCBA687-D8B3-4F03-99F6-D1F446FB0590}"
-	ProjectSection(SolutionItems) = preProject
-		tools\after_build.ps1 = tools\after_build.ps1
-		tools\before_build.ps1 = tools\before_build.ps1
-		tools\build.cake = tools\build.cake
-		tools\init.ps1 = tools\init.ps1
-		tools\SA.ruleset = tools\SA.ruleset
-		tools\stylecop.json = tools\stylecop.json
-	EndProjectSection
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

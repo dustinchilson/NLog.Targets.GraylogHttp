@@ -4,11 +4,11 @@
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <GenerateBindingRedirectsOutputType>true</GenerateBindingRedirectsOutputType>
     <SkipValidatePackageReferences>true</SkipValidatePackageReferences>
-    <CodeAnalysisRuleSet>$(SolutionDir)tools\SA.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRuleSet>$(SolutionDir)SA.ruleset</CodeAnalysisRuleSet>
  </PropertyGroup>
 
  <ItemGroup>
-    <AdditionalFiles Include="$(SolutionDir)tools\stylecop.json" />
+    <AdditionalFiles Include="$(SolutionDir)stylecop.json" />
  </ItemGroup>
 
 </Project>

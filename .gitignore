@@ -285,9 +285,9 @@ paket-files/
 __pycache__/
 *.pyc
 
-# Cake - Uncomment if you are using it
-tools/tools/**
-!tools/tools/packages.config
+# Cake
+tools/**
+!tools/packages.config
 
 # Tabs Studio
 *.tss
