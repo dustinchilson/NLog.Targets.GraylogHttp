@@ -6,7 +6,7 @@ var platform = Argument("platform", "Any CPU");
 var skipTests = Argument("SkipTests", false);
 
 // Variables
-var artifactsDirectory = Directory("../artifacts");
+var artifactsDirectory = Directory("./artifacts");
 var solutionFile = "./NLog.Targets.GraylogHttp.sln";
 var isRunningOnWindows = IsRunningOnWindows();
 var IsOnAppVeyorAndNotPR = AppVeyor.IsRunningOnAppVeyor && !AppVeyor.Environment.PullRequest.IsPullRequest;
@@ -73,6 +73,7 @@ Task("Pack")
 		DotNetCorePack(path.FullPath, new DotNetCorePackSettings
         {
             Configuration = configuration,
+			NoRestore = true,
 			NoBuild = true,
             OutputDirectory = artifactsDirectory,
 			//IncludeSymbols = true
