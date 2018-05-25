@@ -6,7 +6,7 @@ var skipTests = Argument("SkipTests", false);
 
 // Variables
 var artifactsDirectory = Directory("../artifacts");
-var solutionFile = "../NLog.Targets.GraylogHttp.sln";
+var solutionFile = "./NLog.Targets.GraylogHttp.sln";
 var isRunningOnWindows = IsRunningOnWindows();
 var IsOnAppVeyorAndNotPR = AppVeyor.IsRunningOnAppVeyor && !AppVeyor.Environment.PullRequest.IsPullRequest;
 
@@ -60,7 +60,7 @@ Task("Test")
 			Configuration = configuration,
 			NoBuild = true
 		};
-		DotNetCoreTest("../src/NLog.Targets.GraylogHttp.Tests/NLog.Targets.GraylogHttp.Tests.csproj", settings);
+		DotNetCoreTest("./src/NLog.Targets.GraylogHttp.Tests/NLog.Targets.GraylogHttp.Tests.csproj", settings);
     });
 
 Task("Pack")
@@ -76,7 +76,7 @@ Task("Pack")
 			//IncludeSymbols = true
         };
 
-        var projects = GetFiles("../src/**/NLog.Targets.GraylogHttp.csproj");
+        var projects = GetFiles("./src/**/NLog.Targets.GraylogHttp.csproj");
         foreach(var project in projects)
         {
             DotNetCorePack(project.FullPath, settings);

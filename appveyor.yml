@@ -24,7 +24,7 @@ init:
       }
 
 build_script:
-- ps: .\tools\build.ps1
+- ps: .\build.ps1
 
 test: off
 
