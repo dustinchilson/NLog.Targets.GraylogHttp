@@ -56,11 +56,12 @@ Task("Test")
     .WithCriteria(!skipTests)
     .Does(() =>
     {
-		var settings = new DotNetCoreTestSettings
+		var path = MakeAbsolute(new DirectoryPath(solutionFile));
+		DotNetCoreTest(path.FullPath, new DotNetCoreTestSettings
 		{
-			Configuration = configuration
-		};
-		DotNetCoreTest("./src/NLog.Targets.GraylogHttp.Tests/NLog.Targets.GraylogHttp.Tests.csproj", settings);
+			Configuration = configuration,
+			NoBuild = true
+		});
     });
 
 Task("Pack")
