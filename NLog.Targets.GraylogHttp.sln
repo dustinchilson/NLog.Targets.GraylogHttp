@@ -10,6 +10,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Misc", "Misc", "{7970F18F-8
 		.gitignore = .gitignore
 		appveyor.yml = appveyor.yml
 		Directory.Build.props = Directory.Build.props
+		global.json = global.json
 		LICENSE = LICENSE
 		README.md = README.md
 	EndProjectSection
@@ -30,6 +31,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tools", "Tools", "{3DCBA687
 	ProjectSection(SolutionItems) = preProject
 		tools\after_build.ps1 = tools\after_build.ps1
 		tools\before_build.ps1 = tools\before_build.ps1
+		tools\build.cake = tools\build.cake
 		tools\init.ps1 = tools\init.ps1
 		tools\SA.ruleset = tools\SA.ruleset
 		tools\stylecop.json = tools\stylecop.json

@@ -6,6 +6,8 @@ image: Visual Studio 2017
 pull_requests:  
   do_not_increment_build_number: true
   
+skip_tags: true
+
 nuget:  
   disable_publish_on_pr: true
 
@@ -21,18 +23,13 @@ init:
         Update-AppveyorBuild -Version "$($env:APPVEYOR_BUILD_VERSION)-pre$($env:APPVEYOR_REPO_COMMIT.substring(0,7))"
       }
 
-before_build:
-  - ps: .\tools\before_build.ps1
+build_script:
+- ps: .\build.ps1
 
-build:
-  project: .\NLog.Targets.GraylogHttp.sln
-  parallel: true
-
-after_build:
-  - ps: .\tools\after_build.ps1
+test: off
 
 artifacts:  
-- path: .\src\NLog.Targets.GraylogHttp\artifacts\**\*.nupkg
+- path: .\artifacts\**\*.nupkg
   name: NuGet
 
 deploy:
