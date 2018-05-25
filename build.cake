@@ -69,19 +69,14 @@ Task("Pack")
     .WithCriteria((IsOnAppVeyorAndNotPR || string.Equals(target, "pack", StringComparison.OrdinalIgnoreCase)) && isRunningOnWindows)
     .Does(() =>
     {
-        var settings = new DotNetCorePackSettings
+		var path = MakeAbsolute(new DirectoryPath(solutionFile));
+		DotNetCorePack(path.FullPath, new DotNetCorePackSettings
         {
             Configuration = configuration,
 			NoBuild = true,
             OutputDirectory = artifactsDirectory,
 			//IncludeSymbols = true
-        };
-
-        var projects = GetFiles("./src/**/NLog.Targets.GraylogHttp.csproj");
-        foreach(var project in projects)
-        {
-            DotNetCorePack(project.FullPath, settings);
-        }
+        });
     });
 
 Task("Default")
