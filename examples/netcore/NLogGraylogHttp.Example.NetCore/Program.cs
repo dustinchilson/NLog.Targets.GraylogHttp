@@ -1,14 +1,14 @@
 ﻿using System;
-using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using NLog;
 using NLog.Extensions.Logging;
 
 namespace NLogGraylogHttp.Example.NetCore
 {
-    class Program
+    internal class Program
     {
-        public static void Main(string[] args)
+        public static void Main()
         {
             var serviceProvider = new ServiceCollection()
                 .AddLogging()
@@ -19,7 +19,7 @@ namespace NLogGraylogHttp.Example.NetCore
             serviceProvider
                 .GetService<ILoggerFactory>()
                 .AddNLog();
-            
+
             var logger = serviceProvider.GetService<ILoggerFactory>().CreateLogger<Program>();
             var nLogLogger = LogManager.GetCurrentClassLogger();
 

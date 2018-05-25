@@ -7,6 +7,15 @@ namespace NLog.Targets.GraylogHttp
     internal class GraylogMessageBuilder
     {
         private readonly JsonObject _graylogMessage = new JsonObject();
+        private readonly Func<int> _timestampGenerator;
+
+        internal GraylogMessageBuilder(Func<int> timestampGenerator = null)
+        {
+            if (timestampGenerator == null)
+                timestampGenerator = () => (int)(DateTime.UtcNow - new DateTime(1970, 1, 1)).TotalSeconds;
+
+            _timestampGenerator = timestampGenerator;
+        }
 
         public GraylogMessageBuilder WithLevel(LogLevel level)
         {
@@ -23,18 +32,20 @@ namespace NLog.Targets.GraylogHttp
             else
                 graylogLevel = level == LogLevel.Warn ? GelfLevel.Warning : GelfLevel.Error;
 
-            return this.WithProperty("level", (int)graylogLevel);
+            return WithProperty("level", (int)graylogLevel);
         }
 
         public GraylogMessageBuilder WithProperty(string propertyName, object value)
         {
-            _graylogMessage[propertyName] = value.ToString();
+            // Trunate due to https://github.com/Graylog2/graylog2-server/issues/873
+            // 32766b max, C# strings 2b per char
+            _graylogMessage[propertyName] = value.ToString().Truncate(16383);
             return this;
         }
 
         public GraylogMessageBuilder WithCustomProperty(string propertyName, object value)
         {
-            return this.WithProperty(string.Format("_{0}", propertyName), value);
+            return WithProperty($"_{propertyName}", value);
         }
 
         public GraylogMessageBuilder WithCustomPropertyRange(Dictionary<string, string> properties)
@@ -44,8 +55,9 @@ namespace NLog.Targets.GraylogHttp
 
         public string Render()
         {
-            _graylogMessage["timestamp"] = (int)(DateTime.UtcNow - new DateTime(1970, 1, 1)).TotalSeconds;
-            _graylogMessage["version"] = "1.1";
+            WithProperty("timestamp", _timestampGenerator());
+            WithProperty("version", "1.1");
+
             return _graylogMessage.ToString();
         }
 

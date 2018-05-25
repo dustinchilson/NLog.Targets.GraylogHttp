@@ -7,9 +7,9 @@ using NLog;
 
 namespace NLogGraylogHttp.Example.NetFx
 {
-    class Program
+    internal class Program
     {
-        static void Main(string[] args)
+        internal static void Main()
         {
             var nLogLogger = LogManager.GetCurrentClassLogger();
 

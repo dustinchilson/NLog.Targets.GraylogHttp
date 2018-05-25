@@ -8,9 +8,14 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Misc", "Misc", "{7970F18F-82A6-4B1C-B2D0-00F440E949F4}"
 	ProjectSection(SolutionItems) = preProject
 		.gitignore = .gitignore
+		after.NLog.Targets.GraylogHttp.sln.targets = after.NLog.Targets.GraylogHttp.sln.targets
 		appveyor.yml = appveyor.yml
+		build.cake = build.cake
+		Directory.Build.props = Directory.Build.props
 		LICENSE = LICENSE
 		README.md = README.md
+		SA.ruleset = SA.ruleset
+		stylecop.json = stylecop.json
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Examples", "Examples", "{13E9D02A-75C8-45FA-B4EB-574279022C3C}"
@@ -21,7 +26,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "netFx", "netFx", "{E122A2B9
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NLogGraylogHttp.Example.NetCore", "examples\netcore\NLogGraylogHttp.Example.NetCore\NLogGraylogHttp.Example.NetCore.csproj", "{1DFD66DF-27C7-414F-AFD9-CCE1E8AD7327}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NLogGraylogHttp.Example.NetFx", "examples\netFx\NLogGraylogHttp.Example.NetFx\NLogGraylogHttp.Example.NetFx.csproj", "{DABBDCD0-4B31-446D-8837-CA42C9E397EF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NLogGraylogHttp.Example.NetFx", "examples\netFx\NLogGraylogHttp.Example.NetFx\NLogGraylogHttp.Example.NetFx.csproj", "{DABBDCD0-4B31-446D-8837-CA42C9E397EF}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NLog.Targets.GraylogHttp.Tests", "src\NLog.Targets.GraylogHttp.Tests\NLog.Targets.GraylogHttp.Tests.csproj", "{B48C64AA-0A97-4369-AF82-DF2B40CC6C37}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -41,6 +48,10 @@ Global
 		{DABBDCD0-4B31-446D-8837-CA42C9E397EF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DABBDCD0-4B31-446D-8837-CA42C9E397EF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DABBDCD0-4B31-446D-8837-CA42C9E397EF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B48C64AA-0A97-4369-AF82-DF2B40CC6C37}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B48C64AA-0A97-4369-AF82-DF2B40CC6C37}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B48C64AA-0A97-4369-AF82-DF2B40CC6C37}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B48C64AA-0A97-4369-AF82-DF2B40CC6C37}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -50,5 +61,8 @@ Global
 		{E122A2B9-1B91-4940-A6FE-7D5392B1FB2C} = {13E9D02A-75C8-45FA-B4EB-574279022C3C}
 		{1DFD66DF-27C7-414F-AFD9-CCE1E8AD7327} = {78A5E8AD-0C4A-4FC2-8C79-1C8BAA96CF57}
 		{DABBDCD0-4B31-446D-8837-CA42C9E397EF} = {E122A2B9-1B91-4940-A6FE-7D5392B1FB2C}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {2755C077-6377-426C-AF1D-D25AF3B74DEB}
 	EndGlobalSection
 EndGlobal

@@ -1,0 +1,18 @@
+<Project>
+ <PropertyGroup>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors> 
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <GenerateBindingRedirectsOutputType>true</GenerateBindingRedirectsOutputType>
+    <SkipValidatePackageReferences>true</SkipValidatePackageReferences>
+    <CodeAnalysisRuleSet>$(SolutionDir)SA.ruleset</CodeAnalysisRuleSet>
+ </PropertyGroup>
+
+ <ItemGroup>
+    <AdditionalFiles Include="$(SolutionDir)stylecop.json" />
+ </ItemGroup>
+  
+  <Target Name="VSTestIfTestProject">
+    <CallTarget Targets="VSTest" Condition="'$(IsTestProject)' == 'true'" />
+  </Target>
+
+</Project>
