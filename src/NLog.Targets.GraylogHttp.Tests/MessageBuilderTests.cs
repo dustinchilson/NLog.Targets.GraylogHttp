@@ -10,15 +10,15 @@ namespace NLog.Targets.GraylogHttp.Tests
         public void SimpleMessageTest()
 #pragma warning restore CA1822 // Mark members as static
         {
-            var testMessage = new GraylogMessageBuilder(() => 10)
+            var testMessage = new GraylogMessageBuilder()
                 .WithCustomProperty("facility", "Test")
                 .WithProperty("short_message", "short_message")
                 .WithProperty("host", "magic")
                 .WithLevel(LogLevel.Debug)
                 .WithCustomProperty("logger_name", "SimpleMessageTest")
-                .Render();
+                .Render(new DateTime(1970, 1, 1, 0, 0, 10, DateTimeKind.Utc));
 
-            var expectedMessage = "{\"_facility\":\"Test\",\"short_message\":\"short_message\",\"host\":\"magic\",\"level\":\"7\",\"_logger_name\":\"SimpleMessageTest\",\"timestamp\":\"10\",\"version\":\"1.1\"}";
+            var expectedMessage = "{\"_facility\":\"Test\",\"short_message\":\"short_message\",\"host\":\"magic\",\"level\":7,\"_logger_name\":\"SimpleMessageTest\",\"timestamp\":10,\"version\":\"1.1\"}";
 
             Assert.Equal(expectedMessage, testMessage);
         }
@@ -28,16 +28,16 @@ namespace NLog.Targets.GraylogHttp.Tests
         public void MessageWithHugePropertyTest()
 #pragma warning restore CA1822 // Mark members as static
         {
-            var testMessage = new GraylogMessageBuilder(() => 10)
+            var testMessage = new GraylogMessageBuilder()
                 .WithCustomProperty("facility", "Test")
                 .WithProperty("short_message", "short_message")
                 .WithProperty("host", "magic")
                 .WithLevel(LogLevel.Debug)
                 .WithCustomProperty("logger_name", "SimpleMessageTest")
                 .WithProperty("longstring", new string('*', 50000))
-                .Render();
+                .Render(new DateTime(1970, 1, 1, 0, 0, 10, DateTimeKind.Utc));
 
-            var expectedMessage = $"{{\"_facility\":\"Test\",\"short_message\":\"short_message\",\"host\":\"magic\",\"level\":\"7\",\"_logger_name\":\"SimpleMessageTest\",\"longstring\":\"{new string('*', 16383)}\",\"timestamp\":\"10\",\"version\":\"1.1\"}}";
+            var expectedMessage = $"{{\"_facility\":\"Test\",\"short_message\":\"short_message\",\"host\":\"magic\",\"level\":7,\"_logger_name\":\"SimpleMessageTest\",\"longstring\":\"{new string('*', 16383)}\",\"timestamp\":10,\"version\":\"1.1\"}}";
 
             Assert.Equal(expectedMessage, testMessage);
         }
