@@ -59,7 +59,7 @@ namespace NLog.Targets.GraylogHttp
         {
             GraylogMessageBuilder messageBuilder = new GraylogMessageBuilder()
                 .WithCustomProperty("_facility", Facility)
-                .WithProperty("short_message", logEvent.Message)
+                .WithProperty("short_message", logEvent.FormattedMessage)
                 .WithProperty("host", Host)
                 .WithLevel(logEvent.Level)
                 .WithCustomProperty("_logger_name", logEvent.LoggerName);
