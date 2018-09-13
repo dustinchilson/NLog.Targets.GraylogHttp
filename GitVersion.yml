@@ -4,7 +4,7 @@ assembly-versioning-scheme: MajorMinor
 commit-message-incrementing: Disabled
 continuous-delivery-fallback-tag: ''
 
-mode: Mainline
+mode: ContinuousDeployment
 
 branches: {}
 
