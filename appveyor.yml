@@ -3,6 +3,10 @@ configuration: Release
 platform: Any CPU
 image: "Visual Studio 2017 Preview"
 
+branches:
+  only:
+  - master
+
 pull_requests:
   do_not_increment_build_number: true
 
