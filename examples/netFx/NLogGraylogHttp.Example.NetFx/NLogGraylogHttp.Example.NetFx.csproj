@@ -10,7 +10,7 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.CodeAnalysis.FxCopAnalyzers" Version="2.6.0" />
-    <PackageReference Include="NLog" Version="4.5.4" />
+    <PackageReference Include="NLog" Version="4.5.9" />
     <PackageReference Include="StyleCop.Analyzers" Version="1.0.2" />
   </ItemGroup>
   <ItemGroup>
