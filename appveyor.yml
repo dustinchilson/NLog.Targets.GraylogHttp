@@ -15,11 +15,6 @@ skip_branch_with_pr: true
 nuget:
   disable_publish_on_pr: true
 
-dotnet_csproj:
-  patch: true
-  file: '**\*.csproj'
-  package_version: '{version}'
-
 build_script:
 - ps: .\build.ps1
 
