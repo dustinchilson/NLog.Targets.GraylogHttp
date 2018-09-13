@@ -1,14 +1,15 @@
 version: 0.1.{build}
 configuration: Release
 platform: Any CPU
-image: Visual Studio 2017
+image: "Visual Studio 2017 Preview"
 
-pull_requests:  
+pull_requests:
   do_not_increment_build_number: true
-  
-skip_tags: true
 
-nuget:  
+skip_tags: true
+skip_branch_with_pr: true
+
+nuget:
   disable_publish_on_pr: true
 
 dotnet_csproj:
@@ -16,19 +17,26 @@ dotnet_csproj:
   file: '**\*.csproj'
   package_version: '{version}'
 
-init:
-  - ps: >-
-      if ($env:APPVEYOR_REPO_BRANCH -ne "master")
-      {
-        Update-AppveyorBuild -Version "$($env:APPVEYOR_BUILD_VERSION)-pre$($env:APPVEYOR_REPO_COMMIT.substring(0,7))"
-      }
+install:
+  - choco install gitversion.portable -pre -y
+
+before_build:
+  - nuget restore
+  - ps: gitversion /l console /output buildserver /updateAssemblyInfo
+
+# init:
+#   - ps: >-
+#       if ($env:APPVEYOR_REPO_BRANCH -ne "master")
+#       {
+#         Update-AppveyorBuild -Version "$($env:APPVEYOR_BUILD_VERSION)-pre$($env:APPVEYOR_REPO_COMMIT.substring(0,7))"
+#       }
 
 build_script:
 - ps: .\build.ps1
 
 test: off
 
-artifacts:  
+artifacts:
 - path: .\artifacts\**\*.nupkg
   name: NuGet
 

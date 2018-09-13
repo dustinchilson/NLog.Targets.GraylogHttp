@@ -1,0 +1,12 @@
+next-version: 0.2
+
+assembly-versioning-scheme: MajorMinor
+commit-message-incrementing: Disabled
+continuous-delivery-fallback-tag: ''
+
+mode: Mainline
+
+branches: {}
+
+ignore:
+  sha: []
