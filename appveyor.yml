@@ -21,15 +21,7 @@ install:
   - choco install gitversion.portable -pre -y
 
 before_build:
-  - nuget restore
   - ps: gitversion /l console /output buildserver /updateAssemblyInfo
-
-# init:
-#   - ps: >-
-#       if ($env:APPVEYOR_REPO_BRANCH -ne "master")
-#       {
-#         Update-AppveyorBuild -Version "$($env:APPVEYOR_BUILD_VERSION)-pre$($env:APPVEYOR_REPO_COMMIT.substring(0,7))"
-#       }
 
 build_script:
 - ps: .\build.ps1
