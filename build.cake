@@ -1,3 +1,4 @@
+#tool "nuget:?package=GitVersion.CommandLine&version=4.0.0-beta0014"
 
 // ARGUMENTS
 var target = Argument("target", "Default");
@@ -15,6 +16,8 @@ var msBuildSettings = new DotNetCoreMSBuildSettings
 {
     MaxCpuCount = 1
 };
+
+GitVersion versionInfo = null;
 
 //////////////////////////////////////////////////////////////////////
 // PREPARATION
@@ -36,8 +39,18 @@ Task("Restore")
         DotNetCoreRestore(solutionFile);
     });
 
+Task("Version")
+    .Does(() => {
+        GitVersion(new GitVersionSettings{
+            UpdateAssemblyInfo = true,
+            OutputType = GitVersionOutput.BuildServer
+        });
+        versionInfo = GitVersion(new GitVersionSettings{ OutputType = GitVersionOutput.Json });
+    });
+
 Task("Build")
     .IsDependentOn("Restore")
+    .IsDependentOn("Version")
     .Does(() =>
     {
         var path = MakeAbsolute(new DirectoryPath(solutionFile));
