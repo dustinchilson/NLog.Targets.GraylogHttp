@@ -33,7 +33,9 @@ deploy:
   api_key:
     secure: OevGaxGEhut0e3EXmzfBfihKqCn5J2Y/Og4ggvxI6I6fP5wvSwdwOjMLtreve7NN
 - provider: GitHub
-  description: https://www.nuget.org/packages/NLog.Targets.GraylogHttp/$(appveyor_build_version)
+  release: $(GitVersion_FullSemVer)
+  description: https://www.nuget.org/packages/NLog.Targets.GraylogHttp/$(GitVersion_FullSemVer)
+  tag: $(GitVersion_FullSemVer)
   auth_token:
     secure: O1DcrKLaAXkN/17fteBX16dk560KSQgF8HcTCj+mcXL5rgZ3TNjxJMXbSZ6AmRl5 # your encrypted token from GitHub
   artifact: /.*\.nupkg/            # upload all NuGet packages to release assets
