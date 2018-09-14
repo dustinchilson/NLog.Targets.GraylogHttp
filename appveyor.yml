@@ -1,34 +1,27 @@
 version: 0.1.{build}
 configuration: Release
 platform: Any CPU
-image: Visual Studio 2017
+image: "Visual Studio 2017"
 
-pull_requests:  
+branches:
+  only:
+  - master
+
+pull_requests:
   do_not_increment_build_number: true
-  
+
 skip_tags: true
+skip_branch_with_pr: true
 
-nuget:  
+nuget:
   disable_publish_on_pr: true
-
-dotnet_csproj:
-  patch: true
-  file: '**\*.csproj'
-  package_version: '{version}'
-
-init:
-  - ps: >-
-      if ($env:APPVEYOR_REPO_BRANCH -ne "master")
-      {
-        Update-AppveyorBuild -Version "$($env:APPVEYOR_BUILD_VERSION)-pre$($env:APPVEYOR_REPO_COMMIT.substring(0,7))"
-      }
 
 build_script:
 - ps: .\build.ps1
 
 test: off
 
-artifacts:  
+artifacts:
 - path: .\artifacts\**\*.nupkg
   name: NuGet
 
@@ -44,7 +37,9 @@ deploy:
   api_key:
     secure: OevGaxGEhut0e3EXmzfBfihKqCn5J2Y/Og4ggvxI6I6fP5wvSwdwOjMLtreve7NN
 - provider: GitHub
-  description: https://www.nuget.org/packages/NLog.Targets.GraylogHttp/$(appveyor_build_version)
+  release: v$(GitVersion_FullSemVer)
+  description: https://www.nuget.org/packages/NLog.Targets.GraylogHttp/$(GitVersion_FullSemVer)
+  tag: v$(GitVersion_FullSemVer)
   auth_token:
     secure: O1DcrKLaAXkN/17fteBX16dk560KSQgF8HcTCj+mcXL5rgZ3TNjxJMXbSZ6AmRl5 # your encrypted token from GitHub
   artifact: /.*\.nupkg/            # upload all NuGet packages to release assets
