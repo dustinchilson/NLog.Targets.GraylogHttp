@@ -9,8 +9,6 @@ var skipTests = Argument("SkipTests", false);
 // Variables
 var artifactsDirectory = Directory("./artifacts");
 var solutionFile = "./NLog.Targets.GraylogHttp.sln";
-var isRunningOnWindows = IsRunningOnWindows();
-var IsOnAppVeyorAndNotPR = AppVeyor.IsRunningOnAppVeyor && !AppVeyor.Environment.PullRequest.IsPullRequest;
 
 var msBuildSettings = new DotNetCoreMSBuildSettings
 {
@@ -42,10 +40,16 @@ Task("Restore")
 Task("Version")
     .Does(() => {
         GitVersion(new GitVersionSettings{
-            UpdateAssemblyInfo = true,
+            UpdateAssemblyInfo = false,
             OutputType = GitVersionOutput.BuildServer
         });
         versionInfo = GitVersion(new GitVersionSettings{ OutputType = GitVersionOutput.Json });
+
+        msBuildSettings.Properties.Add("PackageVersion", new List<string> { versionInfo.NuGetVersionV2 });
+        msBuildSettings.Properties.Add("Version", new List<string> { versionInfo.AssemblySemVer });
+        msBuildSettings.Properties.Add("FileVersion", new List<string> { versionInfo.AssemblySemVer });
+        msBuildSettings.Properties.Add("AssemblyVersion", new List<string> { versionInfo.AssemblySemVer });
+        msBuildSettings.Properties.Add("AssemblyInformationalVersion", new List<string> { versionInfo.InformationalVersion });
     });
 
 Task("Build")
@@ -79,7 +83,7 @@ Task("Test")
 
 Task("Pack")
     .IsDependentOn("Build")
-    .WithCriteria((IsOnAppVeyorAndNotPR || string.Equals(target, "pack", StringComparison.OrdinalIgnoreCase)) && isRunningOnWindows)
+    .WithCriteria(AppVeyor.IsRunningOnAppVeyor)
     .Does(() =>
     {
 		var path = MakeAbsolute(new DirectoryPath(solutionFile));
@@ -89,6 +93,7 @@ Task("Pack")
 			NoRestore = true,
 			NoBuild = true,
             OutputDirectory = artifactsDirectory,
+            MSBuildSettings = msBuildSettings,
 			//IncludeSymbols = true
         });
     });

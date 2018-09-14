@@ -3,7 +3,6 @@
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <GenerateBindingRedirectsOutputType>true</GenerateBindingRedirectsOutputType>
-    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <SkipValidatePackageReferences>true</SkipValidatePackageReferences>
     <CodeAnalysisRuleSet>$(MSBuildThisFileDirectory)SA.ruleset</CodeAnalysisRuleSet>
     <LangVersion>latest</LangVersion>
