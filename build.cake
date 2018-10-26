@@ -77,8 +77,16 @@ Task("Test")
 		DotNetCoreTest(path.FullPath, new DotNetCoreTestSettings
 		{
 			Configuration = configuration,
-			NoBuild = true
+			NoBuild = true,
+            ResultsDirectory = artifactsDirectory,
+            Logger = "trx;LogFileName=TestResults.xml"
 		});
+
+        if (AppVeyor.IsRunningOnAppVeyor)
+        {
+            var testResultsFile = MakeAbsolute(new FilePath($"{MakeAbsolute(artifactsDirectory)}/TestResults.xml"));
+            BuildSystem.AppVeyor.UploadTestResults(testResultsFile, AppVeyorTestResultsType.MSTest);
+        }
     });
 
 Task("Pack")
