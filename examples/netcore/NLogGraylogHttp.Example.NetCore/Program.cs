@@ -6,7 +6,7 @@ using NLog.Extensions.Logging;
 
 namespace NLogGraylogHttp.Example.NetCore
 {
-    internal class Program
+    internal static class Program
     {
         public static void Main()
         {
@@ -20,7 +20,7 @@ namespace NLogGraylogHttp.Example.NetCore
                 .GetService<ILoggerFactory>()
                 .AddNLog();
 
-            var logger = serviceProvider.GetService<ILoggerFactory>().CreateLogger<Program>();
+            var logger = serviceProvider.GetService<ILoggerFactory>().CreateLogger(nameof(Program));
             var nLogLogger = LogManager.GetCurrentClassLogger();
 
             while (true)

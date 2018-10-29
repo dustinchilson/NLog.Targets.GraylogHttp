@@ -59,12 +59,9 @@ namespace NLog.Targets.GraylogHttp
             return _graylogMessage.ToString();
         }
 
-        //private static readonly object GelfLevel_Emergency = 0;
-        //private static readonly object GelfLevel_Alert = 1;
         private static readonly object GelfLevel_Critical = 2;
         private static readonly object GelfLevel_Error = 3;
         private static readonly object GelfLevel_Warning = 4;
-        //private static readonly object GelfLevel_Notice = 5;
         private static readonly object GelfLevel_Informational = 6;
         private static readonly object GelfLevel_Debug = 7;
     }
