@@ -1,18 +1,25 @@
 <Project>
  <PropertyGroup>
-    <TreatWarningsAsErrors>true</TreatWarningsAsErrors> 
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <GenerateBindingRedirectsOutputType>true</GenerateBindingRedirectsOutputType>
     <SkipValidatePackageReferences>true</SkipValidatePackageReferences>
-    <CodeAnalysisRuleSet>$(SolutionDir)SA.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRuleSet>$(MSBuildThisFileDirectory)SA.ruleset</CodeAnalysisRuleSet>
+    <LangVersion>latest</LangVersion>
  </PropertyGroup>
 
  <ItemGroup>
-    <AdditionalFiles Include="$(SolutionDir)stylecop.json" />
+    <AdditionalFiles Include="$(MSBuildThisFileDirectory)stylecop.json" />
  </ItemGroup>
-  
+
   <Target Name="VSTestIfTestProject">
     <CallTarget Targets="VSTest" Condition="'$(IsTestProject)' == 'true'" />
   </Target>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.CodeAnalysis.FxCopAnalyzers" Version="2.6.2" PrivateAssets="all" />
+    <PackageReference Include="StyleCop.Analyzers" Version="1.0.2" />
+    <PackageReference Include="SonarAnalyzer.CSharp" Version="7.7.0.7192" PrivateAssets="all" />
+  </ItemGroup>
 
 </Project>
