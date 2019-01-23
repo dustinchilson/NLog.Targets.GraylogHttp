@@ -5,7 +5,7 @@
       "xmlHeader":  false 
     },
     "orderingRules": {
-      "usingDirectivesPlacement": "outsideNamespace",
+      "usingDirectivesPlacement": "outsideNamespace"
     },
     "namingRules": {
       "allowCommonHungarianPrefixes": false

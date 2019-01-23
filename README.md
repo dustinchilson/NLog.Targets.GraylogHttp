@@ -74,4 +74,4 @@ logger.Log(e);
 
 ## References
 
-[Gelf Spec](https://www.graylog.org/resources/gelf/)
+[Gelf Spec](http://docs.graylog.org/en/latest/pages/gelf.html)
