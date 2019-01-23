@@ -9,9 +9,6 @@
     <ProjectReference Include="..\..\..\src\NLog.Targets.GraylogHttp\NLog.Targets.GraylogHttp.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="NLog" Version="4.5.10" />
-  </ItemGroup>
-  <ItemGroup>
     <Reference Include="System.Configuration" />
     <Reference Include="System.IO.Compression" />
     <Reference Include="System.Net.Http" />

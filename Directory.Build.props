@@ -6,6 +6,8 @@
     <SkipValidatePackageReferences>true</SkipValidatePackageReferences>
     <CodeAnalysisRuleSet>$(MSBuildThisFileDirectory)SA.ruleset</CodeAnalysisRuleSet>
     <LangVersion>latest</LangVersion>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <TieredCompilation>true</TieredCompilation>
  </PropertyGroup>
 
  <ItemGroup>
@@ -15,6 +17,10 @@
   <Target Name="VSTestIfTestProject">
     <CallTarget Targets="VSTest" Condition="'$(IsTestProject)' == 'true'" />
   </Target>
+
+  <ItemGroup>
+    <PackageReference Include="NLog" Version="4.5.11" />
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.CodeAnalysis.FxCopAnalyzers" Version="2.6.3" PrivateAssets="all" />
