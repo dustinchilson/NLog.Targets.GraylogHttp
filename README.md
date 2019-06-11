@@ -25,7 +25,7 @@ This library runs under netstandard 1.3 and fully supports both netstandard and 
 
 ## Usage
 
-Add or modify your NLog Configuration to add the new target and Extension Assembily.
+Add or modify your NLog Configuration to add the new target and Extension Assembly.
 
 ```
 <nlog xmlns="http://www.nlog-project.org/schemas/NLog.xsd"
@@ -52,6 +52,12 @@ Add or modify your NLog Configuration to add the new target and Extension Assemb
 </nlog>
 ```
 
+
+- *graylogServer* - REQUIRED - URI formatted address of your server (e.g. http://192.168.1.2, http://mygraylog.com)
+- *graylogPort* - OPTIONAL - server port, normally specified by Input in Graylog
+- *facility* - OPTIONAL - variable could be used to identify your application, library, etc.
+
+
 ### Simple Logging
 
 ```
@@ -71,6 +77,11 @@ var e = new LogEventInfo(LogLevel.Fatal, "Test", "Test Message");
 e.Properties["test_prop"] = "test property";
 logger.Log(e);
 ```
+
+## Note
+
+In order to receive logs in your Graylog server, make sure you create **Input** for your application mentioned in [Getting Started](http://docs.graylog.org/en/3.0/pages/getting_started.html) guide under Collect Messages link.
+
 
 ## References
 
