@@ -54,7 +54,7 @@ namespace NLog.Targets.GraylogHttp
 
         public string Render(DateTime timestamp)
         {
-            WithProperty("timestamp", (long)(timestamp.ToUniversalTime() - _epochTime).TotalSeconds);
+            WithProperty("timestamp", (long)(timestamp.ToUniversalTime() - _epochTime).TotalMilliseconds);
             WithProperty("version", "1.1");
             return _graylogMessage.ToString();
         }
