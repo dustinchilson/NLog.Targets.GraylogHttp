@@ -16,9 +16,9 @@ namespace NLog.Targets.GraylogHttp.Tests
                 .WithProperty("host", "magic")
                 .WithLevel(LogLevel.Debug)
                 .WithCustomProperty("logger_name", "SimpleMessageTest")
-                .Render(new DateTime(1970, 1, 1, 0, 0, 10, DateTimeKind.Utc));
+                .Render(new DateTime(1970, 1, 1, 0, 0, 10, 5, DateTimeKind.Utc));
 
-            var expectedMessage = "{\"_facility\":\"Test\",\"short_message\":\"short_message\",\"host\":\"magic\",\"level\":7,\"_logger_name\":\"SimpleMessageTest\",\"timestamp\":10,\"version\":\"1.1\"}";
+            var expectedMessage = "{\"_facility\":\"Test\",\"short_message\":\"short_message\",\"host\":\"magic\",\"level\":7,\"_logger_name\":\"SimpleMessageTest\",\"timestamp\":10.005,\"version\":\"1.1\"}";
 
             Assert.Equal(expectedMessage, testMessage);
         }
@@ -35,9 +35,9 @@ namespace NLog.Targets.GraylogHttp.Tests
                 .WithLevel(LogLevel.Debug)
                 .WithCustomProperty("logger_name", "SimpleMessageTest")
                 .WithProperty("longstring", new string('*', 50000))
-                .Render(new DateTime(1970, 1, 1, 0, 0, 10, DateTimeKind.Utc));
+                .Render(new DateTime(1970, 1, 1, 0, 0, 10, 5, DateTimeKind.Utc));
 
-            var expectedMessage = $"{{\"_facility\":\"Test\",\"short_message\":\"short_message\",\"host\":\"magic\",\"level\":7,\"_logger_name\":\"SimpleMessageTest\",\"longstring\":\"{new string('*', 16383)}\",\"timestamp\":10,\"version\":\"1.1\"}}";
+            var expectedMessage = $"{{\"_facility\":\"Test\",\"short_message\":\"short_message\",\"host\":\"magic\",\"level\":7,\"_logger_name\":\"SimpleMessageTest\",\"longstring\":\"{new string('*', 16383)}\",\"timestamp\":10.005,\"version\":\"1.1\"}}";
 
             Assert.Equal(expectedMessage, testMessage);
         }

@@ -5,7 +5,7 @@ namespace NLog.Targets.GraylogHttp
     internal class GraylogMessageBuilder
     {
         private readonly JsonObject _graylogMessage = new JsonObject();
-        private static readonly DateTime _epochTime = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+        private static readonly DateTime _epochTime = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
 
         public GraylogMessageBuilder WithLevel(LogLevel level)
         {
@@ -54,7 +54,7 @@ namespace NLog.Targets.GraylogHttp
 
         public string Render(DateTime timestamp)
         {
-            WithProperty("timestamp", (long)(timestamp.ToUniversalTime() - _epochTime).TotalSeconds);
+            WithProperty("timestamp", (decimal)(timestamp.ToUniversalTime() - _epochTime).TotalSeconds);
             WithProperty("version", "1.1");
             return _graylogMessage.ToString();
         }
