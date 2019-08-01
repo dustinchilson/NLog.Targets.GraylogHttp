@@ -5,7 +5,7 @@ namespace NLog.Targets.GraylogHttp
     internal class GraylogMessageBuilder
     {
         private readonly JsonObject _graylogMessage = new JsonObject();
-        private static readonly DateTime _epochTime = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+        private static readonly DateTime _epochTime = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
 
         public GraylogMessageBuilder WithLevel(LogLevel level)
         {
