@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<RuleSet Name="SalesPad Ruleset" Description="These rules focus on the most critical problems in your code, including potential security holes, application crashes, and other important logic and design errors. You should include rule set in any custom rule set you create for your projects." ToolsVersion="15.0">
+<RuleSet Name="SalesPad Ruleset" Description="These rules focus on the most critical problems in your code, including potential security holes, application crashes, and other important logic and design errors. You should include rule set in any custom rule set you create for your projects." ToolsVersion="16.0">
   <Rules AnalyzerId="Desktop.Analyzers" RuleNamespace="Desktop.Analyzers">
     <Rule Id="CA3075" Action="None" />
   </Rules>
@@ -44,8 +44,8 @@
     <Rule Id="CA1064" Action="Error" />
     <Rule Id="CA1065" Action="Error" />
     <Rule Id="CA1301" Action="Error" />
+    <Rule Id="CA1303" Action="None" />
     <Rule Id="CA1302" Action="Error" />
-    <Rule Id="CA1303" Action="Error" />
     <Rule Id="CA1400" Action="Error" />
     <Rule Id="CA1401" Action="Error" />
     <Rule Id="CA1403" Action="Error" />

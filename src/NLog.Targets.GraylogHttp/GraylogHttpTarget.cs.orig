@@ -79,10 +79,14 @@ namespace NLog.Targets.GraylogHttp
 
         protected override void Write(LogEventInfo logEvent)
         {
+<<<<<<< HEAD
             if (logEvent == null)
                 return;
 
+             GraylogMessageBuilder messageBuilder = new GraylogMessageBuilder()
+=======
             GraylogMessageBuilder messageBuilder = new GraylogMessageBuilder()
+>>>>>>> origin/master
                 .WithProperty("short_message", logEvent.FormattedMessage)
                 .WithProperty("host", Host)
                 .WithLevel(logEvent.Level)
