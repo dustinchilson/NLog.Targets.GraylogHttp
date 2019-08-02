@@ -82,7 +82,7 @@ namespace NLog.Targets.GraylogHttp
             if (logEvent == null)
                 return;
 
-             GraylogMessageBuilder messageBuilder = new GraylogMessageBuilder()
+            GraylogMessageBuilder messageBuilder = new GraylogMessageBuilder()
                 .WithProperty("short_message", logEvent.FormattedMessage)
                 .WithProperty("host", Host)
                 .WithLevel(logEvent.Level)
