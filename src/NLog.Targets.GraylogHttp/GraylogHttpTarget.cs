@@ -79,14 +79,14 @@ namespace NLog.Targets.GraylogHttp
 
         protected override void Write(LogEventInfo logEvent)
         {
-             GraylogMessageBuilder messageBuilder = new GraylogMessageBuilder()
+            GraylogMessageBuilder messageBuilder = new GraylogMessageBuilder()
                 .WithProperty("short_message", logEvent.FormattedMessage)
                 .WithProperty("host", Host)
                 .WithLevel(logEvent.Level)
                 .WithCustomProperty("logger_name", logEvent.LoggerName);
 
-             if (!string.IsNullOrEmpty(Facility))
-                 messageBuilder.WithCustomProperty("facility", Facility);
+            if (!string.IsNullOrEmpty(Facility))
+                messageBuilder.WithCustomProperty("facility", Facility);
 
             var properties = GetAllProperties(logEvent);
             foreach (var property in properties)
@@ -125,18 +125,20 @@ namespace NLog.Targets.GraylogHttp
             }
             catch (BrokenCircuitException)
             {
-                InternalLogger.Error("GraylogHttp(Name={0}): The Graylog server seems to be inaccessible, the log messages were not sent to the server.", Name);
+                InternalLogger.Error(
+                    "GraylogHttp(Name={0}): The Graylog server seems to be inaccessible, the log messages were not sent to the server.",
+                    Name);
             }
         }
 
         /// <summary>
-        /// Gets the machine name
+        /// Gets the machine name.
         /// </summary>
         private string GetMachineName()
         {
             return TryLookupValue(() => Environment.GetEnvironmentVariable("COMPUTERNAME"), "COMPUTERNAME")
-                ?? TryLookupValue(() => Environment.GetEnvironmentVariable("HOSTNAME"), "HOSTNAME")
-                ?? TryLookupValue(() => Dns.GetHostName(), "DnsHostName");
+                   ?? TryLookupValue(() => Environment.GetEnvironmentVariable("HOSTNAME"), "HOSTNAME")
+                   ?? TryLookupValue(() => Dns.GetHostName(), "DnsHostName");
         }
 
         private string TryLookupValue(Func<string> lookupFunc, string lookupType)
