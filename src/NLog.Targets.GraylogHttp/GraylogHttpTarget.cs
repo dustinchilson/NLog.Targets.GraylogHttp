@@ -79,6 +79,9 @@ namespace NLog.Targets.GraylogHttp
 
         protected override void Write(LogEventInfo logEvent)
         {
+            if (logEvent == null)
+                return;
+
              GraylogMessageBuilder messageBuilder = new GraylogMessageBuilder()
                 .WithProperty("short_message", logEvent.FormattedMessage)
                 .WithProperty("host", Host)
@@ -101,7 +104,9 @@ namespace NLog.Targets.GraylogHttp
                             messageBuilder.WithCustomProperty(property.Key, property.Value?.ToString());
                     }
                 }
+#pragma warning disable CA1031 // Do not catch general exception types
                 catch (Exception ex)
+#pragma warning restore CA1031 // Do not catch general exception types
                 {
                     InternalLogger.Error(ex, "GraylogHttp(Name={0}): Fail to handle LogEvent Properties", Name);
                 }
@@ -146,7 +151,9 @@ namespace NLog.Targets.GraylogHttp
                 string lookupValue = lookupFunc()?.Trim();
                 return string.IsNullOrEmpty(lookupValue) ? null : lookupValue;
             }
+#pragma warning disable CA1031 // Do not catch general exception types
             catch (Exception ex)
+#pragma warning restore CA1031 // Do not catch general exception types
             {
                 InternalLogger.Warn(ex, "GraylogHttp(Name={0}): Failed to lookup {1}", Name, lookupType);
                 return null;
