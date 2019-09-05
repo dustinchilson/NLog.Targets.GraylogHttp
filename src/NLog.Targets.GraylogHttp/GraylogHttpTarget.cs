@@ -86,6 +86,7 @@ namespace NLog.Targets.GraylogHttp
                 .WithProperty("short_message", logEvent.FormattedMessage)
                 .WithProperty("host", Host)
                 .WithLevel(logEvent.Level)
+                .WithLevelName(logEvent.Level)
                 .WithCustomProperty("logger_name", logEvent.LoggerName);
 
             if (!string.IsNullOrEmpty(Facility))
