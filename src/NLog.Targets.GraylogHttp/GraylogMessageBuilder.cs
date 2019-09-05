@@ -4,6 +4,7 @@ namespace NLog.Targets.GraylogHttp
 {
     internal class GraylogMessageBuilder
     {
+        private const string LevelNameProperty = "level_name";
         private readonly JsonObject _graylogMessage = new JsonObject();
         private static readonly DateTime _epochTime = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
 
@@ -25,6 +26,12 @@ namespace NLog.Targets.GraylogHttp
                 graylogLevel = GelfLevel_Error;
 
             return WithProperty("level", graylogLevel);
+        }
+
+        public GraylogMessageBuilder WithLevelName(LogLevel logEventLevel)
+        {
+            var levelName = GetLevelName(logEventLevel);
+            return WithCustomProperty(LevelNameProperty, levelName);
         }
 
         public GraylogMessageBuilder WithProperty(string propertyName, object value)
@@ -57,6 +64,46 @@ namespace NLog.Targets.GraylogHttp
             WithProperty("timestamp", (decimal)(timestamp.ToUniversalTime() - _epochTime).TotalSeconds);
             WithProperty("version", "1.1");
             return _graylogMessage.ToString();
+        }
+
+        private static string GetLevelName(LogLevel logEventLevel)
+        {
+            if (logEventLevel == LogLevel.Trace)
+            {
+                return "Trace";
+            }
+
+            if (logEventLevel == LogLevel.Debug)
+            {
+                return "Debug";
+            }
+
+            if (logEventLevel == LogLevel.Info)
+            {
+                return "Info";
+            }
+
+            if (logEventLevel == LogLevel.Warn)
+            {
+                return "Warn";
+            }
+
+            if (logEventLevel == LogLevel.Error)
+            {
+                return "Error";
+            }
+
+            if (logEventLevel == LogLevel.Fatal)
+            {
+                return "Fatal";
+            }
+
+            if (logEventLevel == LogLevel.Off)
+            {
+                return "Off";
+            }
+
+            return string.Empty;
         }
 
         private static readonly object GelfLevel_Critical = 2;
