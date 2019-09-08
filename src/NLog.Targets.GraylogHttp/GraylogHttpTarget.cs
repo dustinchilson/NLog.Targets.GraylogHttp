@@ -87,7 +87,7 @@ namespace NLog.Targets.GraylogHttp
                 .WithProperty("host", Host)
                 .WithLevel(logEvent.Level)
                 .WithSyslogLevelName(logEvent.Level)
-                .WithDotNetLogLevelName(logEvent.Level)
+                .WithNLogLevelName(logEvent.Level)
                 .WithCustomProperty("logger_name", logEvent.LoggerName);
 
             if (!string.IsNullOrEmpty(Facility))
