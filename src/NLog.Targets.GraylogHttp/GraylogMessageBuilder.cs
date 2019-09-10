@@ -25,10 +25,8 @@ namespace NLog.Targets.GraylogHttp
                 graylogLevel = GelfLevel_Error;
             else if (level == LogLevel.Fatal)
                 graylogLevel = GelfLevel_Critical;
-            else if (level == LogLevel.Off)
-                graylogLevel = 7;
             else
-                graylogLevel = 7; //LogLevel basically null.  Just use Debug (lowest Syslog level).
+                graylogLevel = GelfLevel_Debug;
 
             return WithProperty("level", graylogLevel);
         }
@@ -119,7 +117,7 @@ namespace NLog.Targets.GraylogHttp
                 return "Debug";
             }
 
-            return string.Empty;
+            return "Debug";
         }
 
         private static string GetNLogLevelName(LogLevel logEventLevel)
