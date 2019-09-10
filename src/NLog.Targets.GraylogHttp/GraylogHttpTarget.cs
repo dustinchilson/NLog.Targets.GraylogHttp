@@ -41,6 +41,11 @@ namespace NLog.Targets.GraylogHttp
 
         public int FailureCooldownSeconds { get; set; } = 30;
 
+        /// <summary>
+        /// Send the NLog log level name as a custom field (default true).
+        /// </summary>
+        public bool AddNLogLevelName { get; set; } = true;
+
         [ArrayParameter(typeof(TargetPropertyWithContext), "parameter")]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1721:PropertyNamesShouldNotMatchGetMethods", Justification = "NLog Behavior")]
         public override IList<TargetPropertyWithContext> ContextProperties { get; }
@@ -86,7 +91,13 @@ namespace NLog.Targets.GraylogHttp
                 .WithProperty("short_message", logEvent.FormattedMessage)
                 .WithProperty("host", Host)
                 .WithLevel(logEvent.Level)
+                .WithSyslogLevelName(logEvent.Level)
                 .WithCustomProperty("logger_name", logEvent.LoggerName);
+
+            if (AddNLogLevelName)
+            {
+                messageBuilder.WithNLogLevelName(logEvent.Level);
+            }
 
             if (!string.IsNullOrEmpty(Facility))
                 messageBuilder.WithCustomProperty("facility", Facility);

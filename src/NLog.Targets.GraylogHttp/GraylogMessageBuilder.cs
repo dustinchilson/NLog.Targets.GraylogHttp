@@ -4,12 +4,14 @@ namespace NLog.Targets.GraylogHttp
 {
     internal class GraylogMessageBuilder
     {
+        private const string SyslogLevelPropertyName = "syslog_level_name";
+        private const string NLogLogLevelPropertyName = "nlog_level_name";
         private readonly JsonObject _graylogMessage = new JsonObject();
         private static readonly DateTime _epochTime = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
 
         public GraylogMessageBuilder WithLevel(LogLevel level)
         {
-            object graylogLevel;
+            byte graylogLevel;
 
             if (level == LogLevel.Trace)
                 graylogLevel = GelfLevel_Debug;
@@ -19,12 +21,26 @@ namespace NLog.Targets.GraylogHttp
                 graylogLevel = GelfLevel_Informational;
             else if (level == LogLevel.Warn)
                 graylogLevel = GelfLevel_Warning;
+            else if (level == LogLevel.Error)
+                graylogLevel = GelfLevel_Error;
             else if (level == LogLevel.Fatal)
                 graylogLevel = GelfLevel_Critical;
             else
-                graylogLevel = GelfLevel_Error;
+                graylogLevel = GelfLevel_Debug;
 
             return WithProperty("level", graylogLevel);
+        }
+
+        public GraylogMessageBuilder WithSyslogLevelName(LogLevel logEventLevel)
+        {
+            var levelName = GetSyslogLevelName(logEventLevel);
+            return WithCustomProperty(SyslogLevelPropertyName, levelName);
+        }
+
+        public GraylogMessageBuilder WithNLogLevelName(LogLevel logEventLevel)
+        {
+            var levelName = GetNLogLevelName(logEventLevel);
+            return WithCustomProperty(NLogLogLevelPropertyName, levelName);
         }
 
         public GraylogMessageBuilder WithProperty(string propertyName, object value)
@@ -59,10 +75,65 @@ namespace NLog.Targets.GraylogHttp
             return _graylogMessage.ToString();
         }
 
-        private static readonly object GelfLevel_Critical = 2;
-        private static readonly object GelfLevel_Error = 3;
-        private static readonly object GelfLevel_Warning = 4;
-        private static readonly object GelfLevel_Informational = 6;
-        private static readonly object GelfLevel_Debug = 7;
+        private static string GetSyslogLevelName(LogLevel logEventLevel)
+        {
+            if (logEventLevel == null)
+            {
+                return string.Empty;
+            }
+
+            if (logEventLevel == LogLevel.Trace)
+            {
+                return "Debug";
+            }
+
+            if (logEventLevel == LogLevel.Debug)
+            {
+                return "Debug";
+            }
+
+            if (logEventLevel == LogLevel.Info)
+            {
+                return "Informational";
+            }
+
+            if (logEventLevel == LogLevel.Warn)
+            {
+                return "Warning";
+            }
+
+            if (logEventLevel == LogLevel.Error)
+            {
+                return "Error";
+            }
+
+            if (logEventLevel == LogLevel.Fatal)
+            {
+                return "Critical";
+            }
+
+            if (logEventLevel == LogLevel.Off)
+            {
+                return "Debug";
+            }
+
+            return "Debug";
+        }
+
+        private static string GetNLogLevelName(LogLevel logEventLevel)
+        {
+            if (logEventLevel == null)
+            {
+                return string.Empty;
+            }
+
+            return logEventLevel.Name;
+        }
+
+        private const byte GelfLevel_Critical = 2;
+        private const byte GelfLevel_Error = 3;
+        private const byte GelfLevel_Warning = 4;
+        private const byte GelfLevel_Informational = 6;
+        private const byte GelfLevel_Debug = 7;
     }
 }
