@@ -24,6 +24,12 @@ namespace NLog.Targets.GraylogHttp
             ContextProperties = new List<TargetPropertyWithContext>();
         }
 
+        public GraylogHttpTarget(string name)
+            : this()
+        {
+            Name = name;
+        }
+
         [RequiredParameter]
         public string GraylogServer { get; set; }
 
