@@ -5,7 +5,8 @@ image: "Visual Studio 2017"
 
 branches:
   only:
-  - master
+  # - master
+  - never-build-branch-automatically-dont-use-this-name
 
 pull_requests:
   do_not_increment_build_number: true

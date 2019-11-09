@@ -1,4 +1,4 @@
-#tool "nuget:?package=GitVersion.CommandLine&version=4.0.0-beta0014"
+#tool "nuget:?package=GitVersion.CommandLine&version=5.1.2"
 
 // ARGUMENTS
 var target = Argument("target", "Default");
