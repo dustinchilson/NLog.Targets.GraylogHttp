@@ -9,11 +9,31 @@ jobs:
   build:
     runs-on: windows-latest
     steps:
-    - name: use-gitversion
-      uses: GitTools/use-gitversion@master
 
     - name: Checkout
       uses: actions/checkout@master
 
     - name: Run the Cake script
       uses: ecampidoglio/cake-action@master
+
+    - name: Create Release
+      id: create_release
+      uses: actions/create-release@master
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: ${{ GIT_VERSION }}
+        release_name: Release ${{ GIT_VERSION }}
+        draft: false
+        prerelease: false
+
+    - name: Upload Release Asset
+      id: upload-release-asset
+      uses: actions/upload-release-asset@master
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps
+        asset_path: ./artifacts/TestResults.xml
+        asset_name: TestResults.xml
+        asset_content_type: application/xml

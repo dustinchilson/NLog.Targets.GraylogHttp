@@ -45,6 +45,8 @@ Task("Version")
         });
         versionInfo = GitVersion(new GitVersionSettings{ OutputType = GitVersionOutput.Json });
 
+        Information($"::set-env name=GIT_VERSION::{versionInfo.FullSemVer}");
+
         msBuildSettings.Properties.Add("PackageVersion", new List<string> { versionInfo.NuGetVersionV2 });
         msBuildSettings.Properties.Add("Version", new List<string> { versionInfo.AssemblySemVer });
         msBuildSettings.Properties.Add("FileVersion", new List<string> { versionInfo.AssemblySemVer });
@@ -91,7 +93,6 @@ Task("Test")
 
 Task("Pack")
     .IsDependentOn("Build")
-    .WithCriteria(AppVeyor.IsRunningOnAppVeyor)
     .Does(() =>
     {
 		var path = MakeAbsolute(new DirectoryPath(solutionFile));
