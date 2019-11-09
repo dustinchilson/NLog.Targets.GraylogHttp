@@ -14,6 +14,7 @@ jobs:
       uses: actions/checkout@master
 
     - name: Run the Cake script
+      id: cake
       uses: ecampidoglio/cake-action@master
 
     - name: Create Release
@@ -22,8 +23,8 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        tag_name: ${{ GIT_VERSION }}
-        release_name: Release ${{ GIT_VERSION }}
+        tag_name: ${{ steps.cake.env.GIT_VERSION }}
+        release_name: Release ${{ steps.cake.env.GIT_VERSION }}
         draft: false
         prerelease: false
 
