@@ -27,6 +27,10 @@ jobs:
     - name: Push generated package to GitHub registry
       run: nuget push .\artifacts\NLog.Targets.GraylogHttp.${{ env.GIT_VERSION }}.nupkg -Source "GPR" -SkipDuplicate
 
+    - name: Push generated package to nuget.org
+      if: github.ref == 'master'
+      run: nuget push .\artifacts\NLog.Targets.GraylogHttp.${{ env.GIT_VERSION }}.nupkg ${{ secrets.NUGET_ORG_API_KEY }} -Source https://api.nuget.org/v3/index.json
+
     - name: Create Release
       id: create_release
       uses: actions/create-release@master
@@ -35,8 +39,8 @@ jobs:
       with:
         tag_name: v${{env.GIT_VERSION }}
         release_name: Release v${{ env.GIT_VERSION }}
-        draft: true
-        prerelease: true
+        draft: false
+        prerelease: false
 
     - name: Upload Test Results
       id: upload-test-results
