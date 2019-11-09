@@ -23,13 +23,13 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        tag_name: ${{ steps.cake.env.GIT_VERSION }}
-        release_name: Release ${{ steps.cake.env.GIT_VERSION }}
+        tag_name: ${{env.GIT_VERSION }}
+        release_name: Release ${{ env.GIT_VERSION }}
         draft: false
         prerelease: false
 
-    - name: Upload Release Asset
-      id: upload-release-asset
+    - name: Upload Test Results
+      id: upload-test-results
       uses: actions/upload-release-asset@master
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
