@@ -1,0 +1,16 @@
+name: CI-Build
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@master
+
+    - name: Run the Cake script
+      uses: ecampidoglio/cake-action@master
