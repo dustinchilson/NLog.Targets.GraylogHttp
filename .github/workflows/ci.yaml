@@ -35,7 +35,7 @@ jobs:
     #   run: dotnet nuget push ./artifacts/NLog.Targets.GraylogHttp.${{ env.GIT_VERSION }}.nupkg -Source "GPR" -SkipDuplicate
 
     - name: Push generated package to nuget.org
-      if: ${{ steps.extract_branch.outputs.branch }} == 'master'
+      if: steps.extract_branch.outputs.branch == 'master'
       run: dotnet nuget push ./artifacts/NLog.Targets.GraylogHttp.${{ env.GIT_VERSION }}.nupkg --api-key ${{ secrets.NUGET_ORG_API_KEY }} --source https://api.nuget.org/v3/index.json
 
     - name: Create Release
@@ -44,7 +44,7 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        tag_name: v${{env.GIT_VERSION }}
+        tag_name: v${{ env.GIT_VERSION }}
         release_name: Release v${{ env.GIT_VERSION }}
         draft: false
         prerelease: false
