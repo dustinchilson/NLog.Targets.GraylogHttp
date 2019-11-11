@@ -36,7 +36,7 @@ jobs:
 
     - name: Push generated package to nuget.org
       if: steps.extract_branch.outputs.branch == 'master'
-      run: nuget push ./artifacts/NLog.Targets.GraylogHttp.${{ env.GIT_VERSION }}.nupkg ${{ secrets.NUGET_ORG_API_KEY }}
+      run: nuget push ./artifacts/NLog.Targets.GraylogHttp.${{ env.GIT_VERSION }}.nupkg -ApiKey ${{ secrets.NUGET_ORG_API_KEY }}
 
     - name: Create Release
       id: create_release
@@ -47,7 +47,7 @@ jobs:
         tag_name: v${{ env.GIT_VERSION }}
         release_name: Release v${{ env.GIT_VERSION }}
         draft: false
-        prerelease: false
+        prerelease: steps.extract_branch.outputs.branch != 'master'
 
     - name: Upload Test Results
       id: upload-test-results
@@ -55,7 +55,7 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
         asset_path: ./artifacts/TestResults.xml
         asset_name: TestResults.xml
         asset_content_type: application/xml
@@ -66,7 +66,7 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
         asset_path: ./artifacts/NLog.Targets.GraylogHttp.${{ env.GIT_VERSION }}.nupkg
         asset_name: NLog.Targets.GraylogHttp.${{ env.GIT_VERSION }}.nupkg
         asset_content_type: application/xml
