@@ -25,15 +25,18 @@ jobs:
       with:
         cake-bootstrap: true
 
-    # - name: Add private GitHub registry to NuGet
-    #   run: nuget sources add -name "GPR" -Source https://nuget.pkg.github.com/dustinchilson/index.json -Username dustinchilson -Password ${{ secrets.GITHUB_TOKEN }}
+    - name: Install NuGet client
+      uses: warrenbuckley/Setup-Nuget@v1
 
-    # - name: Push generated package to GitHub registry
-    #   run: dotnet nuget push ./artifacts/NLog.Targets.GraylogHttp.${{ env.GIT_VERSION }}.nupkg -Source "GPR" -SkipDuplicate
+    - name: Add private GitHub registry to NuGet
+      run: nuget sources add -name "GPR" -Source https://nuget.pkg.github.com/dustinchilson/index.json -Username dustinchilson -Password ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Push generated package to GitHub registry
+      run: nuget push ./artifacts/NLog.Targets.GraylogHttp.${{ env.GIT_VERSION }}.nupkg -Source "GPR" -SkipDuplicate
 
     - name: Push generated package to nuget.org
       if: steps.extract_branch.outputs.branch == 'master'
-      run: dotnet nuget push ./artifacts/NLog.Targets.GraylogHttp.${{ env.GIT_VERSION }}.nupkg --api-key ${{ secrets.NUGET_ORG_API_KEY }} --source https://api.nuget.org/v3/index.json
+      run: nuget push ./artifacts/NLog.Targets.GraylogHttp.${{ env.GIT_VERSION }}.nupkg ${{ secrets.NUGET_ORG_API_KEY }}
 
     - name: Create Release
       id: create_release
