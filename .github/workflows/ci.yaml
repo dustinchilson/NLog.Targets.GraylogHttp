@@ -8,7 +8,7 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-18.04
+    runs-on: windows-latest
     steps:
 
     - name: Checkout
@@ -16,8 +16,8 @@ jobs:
 
     - name: Extract branch name
       id: extract_branch
-      shell: bash
-      run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
+      shell: powershell
+      run: Write-Host ([string]::Format("##[set-output name=branch;]{0}", $GITHUB_REF.Replace("refs/heads/", "")))
 
     - name: Run the Cake script
       id: cake
