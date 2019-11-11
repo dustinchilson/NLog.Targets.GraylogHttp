@@ -1,4 +1,8 @@
-#tool "nuget:?package=GitVersion.CommandLine&version=5.1.2"
+#module nuget:?package=Cake.DotNetTool.Module&version=0.1.0
+#tool "dotnet:?package=GitVersion.Tool&version=5.1.2"
+
+#addin "nuget:?package=Cake.Json&version=4.0.0"
+#addin "nuget:?package=Newtonsoft.Json&version=11.0.2"
 
 // ARGUMENTS
 var target = Argument("target", "Default");
@@ -39,11 +43,17 @@ Task("Restore")
 
 Task("Version")
     .Does(() => {
-        GitVersion(new GitVersionSettings{
-            UpdateAssemblyInfo = false,
-            OutputType = GitVersionOutput.BuildServer
-        });
-        versionInfo = GitVersion(new GitVersionSettings{ OutputType = GitVersionOutput.Json });
+        IEnumerable<string> redirectedStandardOutput;
+        StartProcess(
+            "dotnet",
+            new ProcessSettings {
+                Arguments = "gitversion /output json",
+                RedirectStandardOutput = true
+            },
+            out redirectedStandardOutput
+        );
+
+        versionInfo = DeserializeJson<GitVersion>(string.Join(Environment.NewLine, redirectedStandardOutput));
 
         Information($"::set-env name=GIT_VERSION::{versionInfo.FullSemVer}");
 
@@ -83,12 +93,6 @@ Task("Test")
             ResultsDirectory = artifactsDirectory,
             Logger = "trx;LogFileName=TestResults.xml"
 		});
-
-        // if (AppVeyor.IsRunningOnAppVeyor)
-        // {
-        //     var testResultsFile = MakeAbsolute(new FilePath($"{MakeAbsolute(artifactsDirectory)}/TestResults.xml"));
-        //     BuildSystem.AppVeyor.UploadTestResults(testResultsFile, AppVeyorTestResultsType.MSTest);
-        // }
     });
 
 Task("Pack")
@@ -102,8 +106,7 @@ Task("Pack")
 			NoRestore = true,
 			NoBuild = true,
             OutputDirectory = artifactsDirectory,
-            MSBuildSettings = msBuildSettings,
-			//IncludeSymbols = true
+            MSBuildSettings = msBuildSettings
         });
     });
 

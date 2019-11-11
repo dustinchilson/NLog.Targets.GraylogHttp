@@ -22,6 +22,8 @@ jobs:
     - name: Run the Cake script
       id: cake
       uses: ecampidoglio/cake-action@master
+      with:
+        cake-bootstrap: true
 
     - name: Install Dotnet Core
       uses: actions/setup-dotnet@v1
