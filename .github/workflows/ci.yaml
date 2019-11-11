@@ -17,7 +17,7 @@ jobs:
     - name: Extract branch name
       id: extract_branch
       shell: powershell
-      run: Write-Host ([string]::Format("##[set-output name=branch;]{0}", $GITHUB_REF.Replace("refs/heads/", "")))
+      run: Write-Host ([string]::Format("##[set-output name=branch;]{0}", $env:GITHUB_REF.Replace("refs/heads/", "")))
 
     - name: Run the Cake script
       id: cake
