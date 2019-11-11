@@ -36,7 +36,7 @@ jobs:
 
     - name: Push generated package to nuget.org
       if: steps.extract_branch.outputs.branch == 'master'
-      run: nuget push ./artifacts/NLog.Targets.GraylogHttp.${{ env.GIT_VERSION }}.nupkg -ApiKey ${{ secrets.NUGET_ORG_API_KEY }}
+      run: nuget push ./artifacts/NLog.Targets.GraylogHttp.${{ env.GIT_VERSION }}.nupkg -ApiKey ${{ secrets.NUGET_ORG_API_KEY }} -Source https://api.nuget.org/v3/index.json
 
     - name: Create Release
       id: create_release
