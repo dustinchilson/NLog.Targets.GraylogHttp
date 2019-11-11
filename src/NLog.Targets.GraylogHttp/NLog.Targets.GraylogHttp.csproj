@@ -8,7 +8,6 @@
     <Description>NLog target that pushes log messages to Graylog using the Http input</Description>
     <PackageTags>NLog;Graylog;Log;Logging</PackageTags>
     <PackageProjectUrl>https://github.com/dustinchilson/NLog.Targets.GraylogHttp</PackageProjectUrl>
-    <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
     <RepositoryType>git</RepositoryType>
     <RepositoryUrl>git://github.com/dustinchilson/NLog.Targets.GraylogHttp</RepositoryUrl>
