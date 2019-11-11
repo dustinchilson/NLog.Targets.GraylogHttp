@@ -25,11 +25,6 @@ jobs:
       with:
         cake-bootstrap: true
 
-    - name: Install Dotnet Core
-      uses: actions/setup-dotnet@v1
-      with:
-        dotnet-version: '3.0.10'
-
     # - name: Add private GitHub registry to NuGet
     #   run: nuget sources add -name "GPR" -Source https://nuget.pkg.github.com/dustinchilson/index.json -Username dustinchilson -Password ${{ secrets.GITHUB_TOKEN }}
 
