@@ -1,4 +1,4 @@
-next-version: 0.2
+next-version: 1.0
 
 assembly-versioning-scheme: MajorMinor
 commit-message-incrementing: Disabled
