@@ -1,7 +1,6 @@
 # NLog.Targets.GraylogHttp
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/d4e1107092654f41a7a513fc8954308e)](https://app.codacy.com/app/dustinchilson/NLog.Targets.GraylogHttp?utm_source=github.com&utm_medium=referral&utm_content=dustinchilson/NLog.Targets.GraylogHttp&utm_campaign=Badge_Grade_Dashboard)
 [![Apache 2.0 licensed](https://img.shields.io/badge/license-Apache%202.0-blue.svg)](https://github.com/dustinchilson/NLog.Targets.GraylogHttp/blob/master/LICENSE)
-master)
 [![NuGet](https://img.shields.io/nuget/v/NLog.Targets.GraylogHttp.svg)](https://www.nuget.org/packages/NLog.Targets.GraylogHttp)
 [![Dependabot Status](https://api.dependabot.com/badges/status?host=github&repo=dustinchilson/NLog.Targets.GraylogHttp)](https://dependabot.com)
 
