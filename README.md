@@ -16,9 +16,9 @@ This library is packaged as a nuget package available [here](https://www.nuget.o
 Install-Package NLog.Targets.GraylogHttp
 ```
 
-## NetStandard, .Net Core, .Net Framwwork 4.5
+## NetStandard, .Net Core 2.1-3.0, .Net Framework 4.5
 
-This library runs under netstandard 1.3 and fully supports both netstandard and .Net Framework
+This library runs under netstandard 1.3 and fully supports both .Net Core 2.1-3.0 and .Net Framework 4.5
 
 ## Usage
 
@@ -49,9 +49,8 @@ Add or modify your NLog Configuration to add the new target and Extension Assemb
 </nlog>
 ```
 
-
-- *graylogServer* - REQUIRED - URI formatted address of your server (e.g. http://192.168.1.2, http://mygraylog.com)
-- *graylogPort* - OPTIONAL - server port, normally specified by Input in Graylog
+- *graylogServer* - REQUIRED - URI formatted address of your server (e.g. http://192.168.1.2, http://example.com, https://graylog.example.com:3030)
+- *graylogPort* - OPTIONAL - server port, normally specified by Input in Graylog, Can also be specified in the server
 - *facility* - OPTIONAL - variable could be used to identify your application, library, etc.
 
 ### Simple Logging
