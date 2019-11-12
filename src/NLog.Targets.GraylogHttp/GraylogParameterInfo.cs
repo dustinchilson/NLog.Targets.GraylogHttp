@@ -1,6 +1,4 @@
-﻿using System;
-using System.Linq;
-using NLog.Config;
+﻿using NLog.Config;
 using NLog.Layouts;
 
 namespace NLog.Targets.GraylogHttp

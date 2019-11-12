@@ -1,27 +1,25 @@
-# NLog.Targets.GraylogHttp 
+# NLog.Targets.GraylogHttp
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/d4e1107092654f41a7a513fc8954308e)](https://app.codacy.com/app/dustinchilson/NLog.Targets.GraylogHttp?utm_source=github.com&utm_medium=referral&utm_content=dustinchilson/NLog.Targets.GraylogHttp&utm_campaign=Badge_Grade_Dashboard)
 [![Apache 2.0 licensed](https://img.shields.io/badge/license-Apache%202.0-blue.svg)](https://github.com/dustinchilson/NLog.Targets.GraylogHttp/blob/master/LICENSE)
-[![Build status](https://ci.appveyor.com/api/projects/status/4g5uup3i6p4kx5tr/branch/master?svg=true)](https://ci.appveyor.com/project/dustinchilson/nlog-targets-grayloghttp/branch/master)
+master)
 [![NuGet](https://img.shields.io/nuget/v/NLog.Targets.GraylogHttp.svg)](https://www.nuget.org/packages/NLog.Targets.GraylogHttp)
-[![Dependency Status](https://dependencyci.com/github/dustinchilson/NLog.Targets.GraylogHttp/badge)](https://dependencyci.com/github/dustinchilson/NLog.Targets.GraylogHttp)
 [![Dependabot Status](https://api.dependabot.com/badges/status?host=github&repo=dustinchilson/NLog.Targets.GraylogHttp)](https://dependabot.com)
 
-
-This is a custom target for NLog that pushes log messages to [Graylog](https://www.graylog.org/) using the Http input. 
+This is a custom target for NLog that pushes log messages to [Graylog](https://www.graylog.org/) using the Http input.
 
 This library was influenced by [EasyGelf](https://github.com/Pliner/EasyGelf)
 
 ## Installation
 
-This library is packaged as a nuget package available [here ](https://www.nuget.org/packages/NLog.Targets.GraylogHttp/)
+This library is packaged as a nuget package available [here](https://www.nuget.org/packages/NLog.Targets.GraylogHttp/)
 
 ```
 Install-Package NLog.Targets.GraylogHttp
 ```
 
-## NetStandard & .net Core
+## NetStandard, .Net Core, .Net Framwwork 4.5
 
-This library runs under netstandard 1.3 and fully supports both netstandard and .net Core.
+This library runs under netstandard 1.3 and fully supports both netstandard and .Net Framework
 
 ## Usage
 
@@ -34,15 +32,15 @@ Add or modify your NLog Configuration to add the new target and Extension Assemb
     <add assembly="NLog.Targets.GraylogHttp"/>
   </extensions>
   <targets>
-    <target name="graylog" 
-              xsi:type="GraylogHttp" 
+    <target name="graylog"
+              xsi:type="GraylogHttp"
               facility="[FACILITY]"
               graylogServer="[SERVER]"
               graylogPort="[PORT]">
         <!-- Location information. -->
         <parameter name="source_method" layout="${callsite}" />
         <parameter name="source_line" layout="${callsite-linenumber}" />
-        
+
         <parameter name="test_prop" layout="${event-context:item=test_prop}" />
       </target>
   </targets>
@@ -56,7 +54,6 @@ Add or modify your NLog Configuration to add the new target and Extension Assemb
 - *graylogServer* - REQUIRED - URI formatted address of your server (e.g. http://192.168.1.2, http://mygraylog.com)
 - *graylogPort* - OPTIONAL - server port, normally specified by Input in Graylog
 - *facility* - OPTIONAL - variable could be used to identify your application, library, etc.
-
 
 ### Simple Logging
 
@@ -81,7 +78,6 @@ logger.Log(e);
 ## Note
 
 In order to receive logs in your Graylog server, make sure you create **Input** for your application mentioned in [Getting Started](http://docs.graylog.org/en/3.0/pages/getting_started.html) guide under Collect Messages link.
-
 
 ## References
 

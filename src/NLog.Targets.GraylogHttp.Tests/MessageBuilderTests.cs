@@ -6,9 +6,7 @@ namespace NLog.Targets.GraylogHttp.Tests
     public class MessageBuilderTests
     {
         [Fact]
-#pragma warning disable CA1822 // Mark members as static
         public void SimpleMessageTest()
-#pragma warning restore CA1822 // Mark members as static
         {
             var testMessage = new GraylogMessageBuilder()
                 .WithCustomProperty("facility", "Test")
@@ -24,9 +22,7 @@ namespace NLog.Targets.GraylogHttp.Tests
         }
 
         [Fact]
-#pragma warning disable CA1822 // Mark members as static
         public void MessageWithHugePropertyTest()
-#pragma warning restore CA1822 // Mark members as static
         {
             var testMessage = new GraylogMessageBuilder()
                 .WithCustomProperty("facility", "Test")

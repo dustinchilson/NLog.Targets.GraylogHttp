@@ -61,7 +61,7 @@ Task("Version")
 
         Information($"::set-env name=GIT_VERSION::{versionInfo.FullSemVer}");
 
-        msBuildSettings.Properties.Add("PackageVersion", new List<string> { versionInfo.NuGetVersionV2 });
+        msBuildSettings.Properties.Add("PackageVersion", new List<string> { versionInfo.FullSemVer });
         msBuildSettings.Properties.Add("Version", new List<string> { versionInfo.AssemblySemVer });
         msBuildSettings.Properties.Add("FileVersion", new List<string> { versionInfo.AssemblySemVer });
         msBuildSettings.Properties.Add("AssemblyVersion", new List<string> { versionInfo.AssemblySemVer });
