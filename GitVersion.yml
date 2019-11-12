@@ -6,7 +6,5 @@ continuous-delivery-fallback-tag: ''
 
 mode: ContinuousDeployment
 
-branches: {}
-
 ignore:
   sha: []
