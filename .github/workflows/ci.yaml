@@ -3,12 +3,14 @@ name: CI-Build
 on:
   push:
     branches:
-      - master
+      - main
   pull_request:
 
 jobs:
   build:
     runs-on: windows-latest
+    if: "! contains(toJSON(github.event.commits.*.message), '[skip-ci]')"
+    
     steps:
 
     - name: Checkout
@@ -35,11 +37,11 @@ jobs:
       run: nuget push ./artifacts/NLog.Targets.GraylogHttp.${{ env.GIT_VERSION }}.nupkg -Source "GPR" -SkipDuplicate
 
     - name: Push generated package to nuget.org
-      if: steps.extract_branch.outputs.branch == 'master'
+      if: steps.extract_branch.outputs.branch == 'main'
       run: nuget push ./artifacts/NLog.Targets.GraylogHttp.${{ env.GIT_VERSION }}.nupkg -ApiKey ${{ secrets.NUGET_ORG_API_KEY }} -Source https://api.nuget.org/v3/index.json
 
     - name: Create Release
-      if: steps.extract_branch.outputs.branch == 'master'
+      if: steps.extract_branch.outputs.branch == 'main'
       id: create_release
       uses: actions/create-release@master
       env:
@@ -51,7 +53,7 @@ jobs:
         prerelease: false
 
     - name: Upload Test Results
-      if: steps.extract_branch.outputs.branch == 'master'
+      if: steps.extract_branch.outputs.branch == 'main'
       id: upload-test-results
       uses: actions/upload-release-asset@master
       env:
@@ -63,7 +65,7 @@ jobs:
         asset_content_type: application/xml
 
     - name: Upload Nuget Package
-      if: steps.extract_branch.outputs.branch == 'master'
+      if: steps.extract_branch.outputs.branch == 'main'
       id: upload-nuget-package
       uses: actions/upload-release-asset@master
       env:
