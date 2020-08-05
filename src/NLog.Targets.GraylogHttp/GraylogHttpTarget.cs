@@ -50,6 +50,18 @@ namespace NLog.Targets.GraylogHttp
         /// </summary>
         public bool AddNLogLevelName { get; set; } = true;
 
+#if NETSTANDARD2_0
+        /// <summary>
+        /// Use IHttpClientFactory (loaded with <see cref="ConfigurationItemFactory.Default.CreateInstance"/>, default false).
+        /// </summary>
+        public bool UseHttpClientFactory { get; set; } = false;
+
+        /// <summary>
+        /// A named HttpClient from to be used with IHttpClientFactory.
+        /// </summary>
+        public string HttpClientName { get; set; }
+#endif
+
         [ArrayParameter(typeof(TargetPropertyWithContext), "parameter")]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1721:PropertyNamesShouldNotMatchGetMethods", Justification = "NLog Behavior")]
         public override IList<TargetPropertyWithContext> ContextProperties { get; }
@@ -59,14 +71,10 @@ namespace NLog.Targets.GraylogHttp
             if (string.IsNullOrEmpty(Host))
                 Host = GetMachineName();
 
-            _httpClient = new HttpClient();
-
             _requestAddress = new Uri(string.Format(System.Globalization.CultureInfo.InvariantCulture, "{0}/gelf", GraylogServer));
 
             if (!string.IsNullOrEmpty(GraylogPort))
                 _requestAddress = new Uri(string.Format(System.Globalization.CultureInfo.InvariantCulture, "{0}:{1}/gelf", GraylogServer, GraylogPort));
-
-            _httpClient.DefaultRequestHeaders.ExpectContinue = false; // Expect (100) Continue breaks the graylog server
 
             _policy = Policy
                 .Handle<Exception>()
@@ -90,6 +98,14 @@ namespace NLog.Targets.GraylogHttp
         {
             if (logEvent == null)
                 return;
+
+#if NETSTANDARD2_0
+            // Filter out internal logs from own HttpClient
+            if (UseHttpClientFactory
+                && logEvent.LoggerName.StartsWith("System.Net.Http.HttpClient." + HttpClientName)
+                && logEvent.Properties["Uri"].Equals(_requestAddress))
+                return;
+#endif
 
             GraylogMessageBuilder messageBuilder = new GraylogMessageBuilder()
                 .WithProperty("short_message", logEvent.FormattedMessage)
@@ -135,6 +151,9 @@ namespace NLog.Targets.GraylogHttp
                     messageBuilder.WithCustomProperty("_exception_stack_trace", logEvent.Exception.StackTrace);
             }
 
+            if (_httpClient == null)
+                InitHttpClient();
+
             try
             {
                 _policy.Execute(() =>
@@ -149,6 +168,30 @@ namespace NLog.Targets.GraylogHttp
                     "GraylogHttp(Name={0}): The Graylog server seems to be inaccessible, the log messages were not sent to the server.",
                     Name);
             }
+        }
+
+        private void InitHttpClient()
+        {
+#if NETSTANDARD2_0
+            if (UseHttpClientFactory)
+            {
+                try
+                {
+                    var factoryInstance = ConfigurationItemFactory.Default.CreateInstance(typeof(System.Net.Http.IHttpClientFactory));
+                    if (factoryInstance is IHttpClientFactory factory)
+                        _httpClient = HttpClientName == null ? factory.CreateClient() : factory.CreateClient(HttpClientName);
+                }
+                catch (NLogConfigurationException ex)
+                {
+                    InternalLogger.Error(ex, "GraylogHttp(Name={0}): IHttpClientFactory couldn't be obtained.", Name);
+                }
+            }
+#endif
+            // Fallback to regular HttpClient
+            if (_httpClient == null)
+                _httpClient = new HttpClient();
+
+            _httpClient.DefaultRequestHeaders.ExpectContinue = false; // Expect (100) Continue breaks the graylog server
         }
 
         /// <summary>
