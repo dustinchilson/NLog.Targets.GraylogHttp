@@ -102,8 +102,7 @@ namespace NLog.Targets.GraylogHttp
 #if NETSTANDARD2_0
             // Filter out internal logs from own HttpClient
             if (UseHttpClientFactory
-                && logEvent.LoggerName.StartsWith("System.Net.Http.HttpClient." + HttpClientName)
-                && logEvent.Properties["Uri"].Equals(_requestAddress))
+                && logEvent.LoggerName.StartsWith("System.Net.Http.HttpClient." + HttpClientName))
                 return;
 #endif
 
@@ -156,10 +155,13 @@ namespace NLog.Targets.GraylogHttp
 
             try
             {
-                _policy.Execute(() =>
+                _policy.Execute(async () =>
                 {
                     var content = new StringContent(messageBuilder.Render(logEvent.TimeStamp), Encoding.UTF8, "application/json");
-                    return _httpClient.PostAsync(_requestAddress, content).Result.EnsureSuccessStatusCode();
+                    var postTask = _httpClient.PostAsync(_requestAddress, content);
+                    var result = await postTask.ConfigureAwait(false);
+                    result.EnsureSuccessStatusCode();
+                    return result;
                 });
             }
             catch (BrokenCircuitException)
