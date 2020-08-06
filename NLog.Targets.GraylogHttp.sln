@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.26430.14
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30320.27
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NLog.Targets.GraylogHttp", "src\NLog.Targets.GraylogHttp\NLog.Targets.GraylogHttp.csproj", "{2DA00B6B-A170-419D-AD82-AC139745A11E}"
 EndProject
@@ -9,7 +9,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Misc", "Misc", "{7970F18F-8
 	ProjectSection(SolutionItems) = preProject
 		.gitignore = .gitignore
 		after.NLog.Targets.GraylogHttp.sln.targets = after.NLog.Targets.GraylogHttp.sln.targets
-		appveyor.yml = appveyor.yml
 		build.cake = build.cake
 		Directory.Build.props = Directory.Build.props
 		LICENSE = LICENSE
