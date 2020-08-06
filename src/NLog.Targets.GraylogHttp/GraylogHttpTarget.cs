@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
 using System.Text;
+using System.Threading.Tasks;
 using NLog.Common;
 using NLog.Config;
 using Polly;
@@ -15,7 +16,7 @@ namespace NLog.Targets.GraylogHttp
     {
         private HttpClient _httpClient;
         private Uri _requestAddress;
-        private CircuitBreakerPolicy _policy;
+        private AsyncCircuitBreakerPolicy _policy;
 
         public GraylogHttpTarget()
         {
@@ -78,7 +79,7 @@ namespace NLog.Targets.GraylogHttp
 
             _policy = Policy
                 .Handle<Exception>()
-                .AdvancedCircuitBreaker(
+                .AdvancedCircuitBreakerAsync(
                     (double)FailureThreshold / 100,
                     TimeSpan.FromSeconds(SamplingDurationSeconds),
                     MinimumThroughput,
@@ -155,9 +156,9 @@ namespace NLog.Targets.GraylogHttp
 
             try
             {
-                _policy.Execute(async () =>
+                _policy.ExecuteAsync(async () =>
                 {
-                    var content = new StringContent(messageBuilder.Render(logEvent.TimeStamp), Encoding.UTF8, "application/json");
+                    using var content = new StringContent(messageBuilder.Render(logEvent.TimeStamp), Encoding.UTF8, "application/json");
                     var postTask = _httpClient.PostAsync(_requestAddress, content);
                     var result = await postTask.ConfigureAwait(false);
                     result.EnsureSuccessStatusCode();
