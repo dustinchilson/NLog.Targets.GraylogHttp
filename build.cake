@@ -6,8 +6,8 @@ var target = Argument("target", "Default");
 var configuration = Argument("configuration", "Release");
 var platform = Argument("platform", "Any CPU");
 var skipTests = Argument("SkipTests", false);
-var version = Argument("SemVersion", "0.0.1");
-var assemblyVersion = Argument("AssemblyVersion", "0.0.1.0");
+var version = Argument("SemVersion" ?? EnvironmentVariable("build_SemVersion"), "0.0.1");
+var assemblyVersion = Argument("AssemblyVersion" ?? EnvironmentVariable("build_AssemblyVersion"), "0.0.1.0");
 
 // Variables
 var artifactsDirectory = Directory("./artifacts");

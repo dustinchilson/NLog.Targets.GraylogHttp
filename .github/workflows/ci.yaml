@@ -34,6 +34,9 @@ jobs:
     - name: Run the Cake script
       id: cake
       uses: ecampidoglio/cake-action@master
+      env:
+        build_SemVersion: ${{ steps.set_version.outputs.version }}
+        build_AssemblyVersion: ${{ steps.set_version.outputs.major }}.${{ steps.set_version.outputs.minor }}.${{ steps.set_version.outputs.patch }}.0
       with:
         cake-bootstrap: true
 
