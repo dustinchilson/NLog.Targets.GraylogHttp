@@ -23,9 +23,10 @@ jobs:
 
     - name: Run the Cake script
       id: cake
-      uses: ecampidoglio/cake-action@master
+      uses: cake-build/cake-action@1.1.1
       with:
         cake-bootstrap: true
+        verbosity: Diagnostic
 
     - name: Install NuGet client
       uses: warrenbuckley/Setup-Nuget@v1
