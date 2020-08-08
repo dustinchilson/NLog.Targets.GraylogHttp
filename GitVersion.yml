@@ -8,7 +8,7 @@ mode: ContinuousDeployment
 
 branches:
   master:
-    regex: ^master$|^main$
+    regex: ^main$|^origin\/main$
     mode: ContinuousDelivery
     tag: ''
     increment: Patch
