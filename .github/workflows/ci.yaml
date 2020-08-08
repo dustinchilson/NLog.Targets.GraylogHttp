@@ -23,7 +23,7 @@ jobs:
 
     - name: Run the Cake script
       id: cake
-      uses: cake-build/cake-action@1.1.1
+      uses: cake-build/cake-action@v1
       with:
         cake-bootstrap: true
         verbosity: Diagnostic
