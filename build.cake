@@ -6,8 +6,6 @@ var target = Argument("target", "Default");
 var configuration = Argument("configuration", "Release");
 var platform = Argument("platform", "Any CPU");
 var skipTests = Argument("SkipTests", false);
-var version = Argument("SemVersion", "0.0.1");
-var assemblyVersion = Argument("AssemblyVersion", "0.0.1.0");
 
 // Variables
 var artifactsDirectory = Directory("./artifacts");
@@ -18,11 +16,7 @@ var msBuildSettings = new DotNetCoreMSBuildSettings
     MaxCpuCount = 1
 };
 
-msBuildSettings.Properties.Add("PackageVersion", new List<string> { version });
-msBuildSettings.Properties.Add("Version", new List<string> { assemblyVersion });
-msBuildSettings.Properties.Add("FileVersion", new List<string> { assemblyVersion });
-msBuildSettings.Properties.Add("AssemblyVersion", new List<string> { assemblyVersion });
-msBuildSettings.Properties.Add("AssemblyInformationalVersion", new List<string> { version });
+GitVersion versionInfo = null;
 
 //////////////////////////////////////////////////////////////////////
 // PREPARATION
@@ -44,12 +38,42 @@ Task("Restore")
         DotNetCoreRestore(solutionFile);
     });
 
+Task("Version")
+    .Does(() => {
+        // dotnet tool install --global GitVersion.Tool --version 5.1.2
+        DotNetCoreTool("tool",
+            new DotNetCoreToolSettings {
+                ArgumentCustomization = args => args.Append("restore")
+            });
+
+        // dotnet gitversion /output json
+        IEnumerable<string> redirectedStandardOutput;
+        StartProcess(
+            "dotnet",
+            new ProcessSettings {
+                Arguments = "dotnet-gitversion /output json",
+                RedirectStandardOutput = true
+            },
+            out redirectedStandardOutput
+        );
+
+        versionInfo = DeserializeJson<GitVersion>(string.Join(Environment.NewLine, redirectedStandardOutput));
+
+        Information($"::set-env name=GIT_VERSION::{versionInfo.FullSemVer}");
+
+        msBuildSettings.Properties.Add("PackageVersion", new List<string> { versionInfo.FullSemVer });
+        msBuildSettings.Properties.Add("Version", new List<string> { versionInfo.AssemblySemVer });
+        msBuildSettings.Properties.Add("FileVersion", new List<string> { versionInfo.AssemblySemVer });
+        msBuildSettings.Properties.Add("AssemblyVersion", new List<string> { versionInfo.AssemblySemVer });
+        msBuildSettings.Properties.Add("AssemblyInformationalVersion", new List<string> { versionInfo.InformationalVersion });
+    });
+
 Task("Build")
     .IsDependentOn("Restore")
+    .IsDependentOn("Version")
     .Does(() =>
     {
         var path = MakeAbsolute(new DirectoryPath(solutionFile));
-        
         DotNetCoreBuild(path.FullPath, new DotNetCoreBuildSettings
         {
             Configuration = configuration,
