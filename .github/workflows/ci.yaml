@@ -15,6 +15,8 @@ jobs:
 
     - name: Checkout
       uses: actions/checkout@master
+      with:
+        fetch-depth: 0
 
     - name: Extract branch name
       id: extract_branch
