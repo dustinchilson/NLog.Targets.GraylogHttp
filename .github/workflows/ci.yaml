@@ -22,6 +22,11 @@ jobs:
       id: extract_branch
       shell: powershell
       run: Write-Host ([string]::Format("##[set-output name=branch;]{0}", $env:GITHUB_REF.Replace("refs/heads/", "")))
+    
+    - name: Install NuGet client
+      uses: nuget/setup-nuget@v1
+      with:
+        nuget-version: '5.x'
 
     - name: Run the Cake script
       id: cake
@@ -29,9 +34,6 @@ jobs:
       with:
         cake-bootstrap: true
         verbosity: Diagnostic
-
-    - name: Install NuGet client
-      uses: warrenbuckley/Setup-Nuget@v1
 
     - name: Add private GitHub registry to NuGet
       run: nuget sources add -name "GPR" -Source https://nuget.pkg.github.com/dustinchilson/index.json -Username dustinchilson -Password ${{ secrets.GITHUB_TOKEN }}
