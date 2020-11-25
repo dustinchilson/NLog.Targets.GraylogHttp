@@ -37,7 +37,7 @@ Task("Version")
     .Does(() => {
         GitVersion versionInfo = GitVersion();
 
-        FileWriteText(new FilePath("$GIT_VERSION"), versionInfo.FullSemVer);
+        FileWriteText(new FilePath("$GITHUB_ENV"), $"GIT_VERSION={versionInfo.FullSemVer}");
 
         msBuildSettings.Properties.Add("PackageVersion", new List<string> { versionInfo.FullSemVer });
         msBuildSettings.Properties.Add("Version", new List<string> { versionInfo.AssemblySemVer });
