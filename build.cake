@@ -40,7 +40,7 @@ Task("Restore")
 
 Task("Version")
     .Does(() => {
-        // dotnet tool install --global GitVersion.Tool --version 5.1.2
+        // dotnet tool install --global GitVersion.Tool --version 5.5.1
         DotNetCoreTool("tool",
             new DotNetCoreToolSettings {
                 ArgumentCustomization = args => args.Append("restore")
