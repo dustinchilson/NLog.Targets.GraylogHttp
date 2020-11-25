@@ -39,11 +39,11 @@ jobs:
       run: nuget sources add -name "GPR" -Source https://nuget.pkg.github.com/dustinchilson/index.json -Username dustinchilson -Password ${{ secrets.GITHUB_TOKEN }}
 
     - name: Push generated package to GitHub registry
-      run: nuget push ./artifacts/*.nupkg -Source "GPR" -SkipDuplicate
+      run: nuget push ./NLog.Targets.GraylogHttp/artifacts/*.nupkg -Source "GPR" -SkipDuplicate
 
     - name: Push generated package to nuget.org
       if: steps.extract_branch.outputs.branch == 'main'
-      run: nuget push ./artifacts/*.nupkg -ApiKey ${{ secrets.NUGET_ORG_API_KEY }} -Source https://api.nuget.org/v3/index.json
+      run: nuget push ./NLog.Targets.GraylogHttp/artifacts/*.nupkg -ApiKey ${{ secrets.NUGET_ORG_API_KEY }} -Source https://api.nuget.org/v3/index.json
 
     - name: Create Release
       if: steps.extract_branch.outputs.branch == 'main'
