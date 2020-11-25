@@ -1,0 +1,10 @@
+next-version: 1.0
+
+assembly-versioning-scheme: MajorMinor
+commit-message-incrementing: Disabled
+continuous-delivery-fallback-tag: ''
+
+mode: ContinuousDeployment
+
+ignore:
+  sha: []
