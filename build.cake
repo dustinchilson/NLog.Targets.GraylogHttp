@@ -1,3 +1,4 @@
+#tool "nuget:?package=GitVersion.CommandLine&version=5.5.1"
 #addin "nuget:?package=Cake.Json&version=4.0.0"
 #addin "nuget:?package=Newtonsoft.Json&version=11.0.2"
 
@@ -40,24 +41,7 @@ Task("Restore")
 
 Task("Version")
     .Does(() => {
-        // dotnet tool install --global GitVersion.Tool --version 5.5.1
-        DotNetCoreTool("tool",
-            new DotNetCoreToolSettings {
-                ArgumentCustomization = args => args.Append("restore")
-            });
-
-        // dotnet gitversion /output json
-        IEnumerable<string> redirectedStandardOutput;
-        StartProcess(
-            "dotnet",
-            new ProcessSettings {
-                Arguments = "dotnet-gitversion /output json",
-                RedirectStandardOutput = true
-            },
-            out redirectedStandardOutput
-        );
-
-        versionInfo = DeserializeJson<GitVersion>(string.Join(Environment.NewLine, redirectedStandardOutput));
+        versionInfo = GitVersion();
 
         Information($"::set-env name=GIT_VERSION::{versionInfo.FullSemVer}");
 
