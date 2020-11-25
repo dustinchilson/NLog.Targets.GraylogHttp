@@ -41,7 +41,9 @@ Task("Restore")
 
 Task("Version")
     .Does(() => {
-        versionInfo = GitVersion();
+        versionInfo = GitVersion(new GitVersionSettings(){
+            Verbosity = GitVersionVerbosity.Debug
+        });
 
         Information($"::set-env name=GIT_VERSION::{versionInfo.FullSemVer}");
 
