@@ -6,7 +6,6 @@
 // ARGUMENTS
 var target = Argument("target", "Default");
 var configuration = Argument("configuration", "Release");
-var platform = Argument("platform", "Any CPU");
 var skipTests = Argument("SkipTests", false);
 
 // Variables
@@ -17,12 +16,6 @@ var msBuildSettings = new DotNetCoreMSBuildSettings
 {
     MaxCpuCount = 1
 };
-
-GitVersion versionInfo = null;
-
-//////////////////////////////////////////////////////////////////////
-// PREPARATION
-//////////////////////////////////////////////////////////////////////
 
 // Define directories.
 var buildDir = Directory("./build/bin") + Directory(configuration);
@@ -42,9 +35,9 @@ Task("Restore")
 
 Task("Version")
     .Does(() => {
-        versionInfo = GitVersion();
+        GitVersion versionInfo = GitVersion();
 
-        FileWriteText(new FilePath("GIT_VERSION"), versionInfo.FullSemVer);
+        FileWriteText(new FilePath("$GIT_VERSION"), versionInfo.FullSemVer);
 
         msBuildSettings.Properties.Add("PackageVersion", new List<string> { versionInfo.FullSemVer });
         msBuildSettings.Properties.Add("Version", new List<string> { versionInfo.AssemblySemVer });
