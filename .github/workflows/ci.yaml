@@ -3,73 +3,71 @@ name: CI-Build
 on:
   push:
     branches:
-      - master
+      - main
   pull_request:
 
 jobs:
   build:
     runs-on: windows-latest
+    if: "! contains(toJSON(github.event.commits.*.message), '[skip-ci]')"
+    
     steps:
-
     - name: Checkout
       uses: actions/checkout@master
+      with:
+        fetch-depth: 0
 
     - name: Extract branch name
       id: extract_branch
       shell: powershell
       run: Write-Host ([string]::Format("##[set-output name=branch;]{0}", $env:GITHUB_REF.Replace("refs/heads/", "")))
+    
+    - name: Install GitVersion
+      uses: gittools/actions/gitversion/setup@v0.9.7
+      with:
+        versionSpec: '5.5.1'
+
+    - name: Determine Version
+      id:   gitversion
+      uses: gittools/actions/gitversion/execute@v0.9.7
+      with:
+        useConfigFile: true
+
+    - name: Install NuGet client
+      uses: nuget/setup-nuget@v1
+      with:
+        nuget-version: '5.x'
 
     - name: Run the Cake script
       id: cake
-      uses: ecampidoglio/cake-action@master
+      uses: cake-build/cake-action@master
       with:
         cake-bootstrap: true
-
-    - name: Install NuGet client
-      uses: warrenbuckley/Setup-Nuget@v1
+        verbosity: Diagnostic
+        arguments: |
+          fullSemVer: ${{steps.gitversion.outputs.fullSemVer}}
+          assemblySemVer: ${{steps.gitversion.outputs.assemblySemVer}}
+          informationalVersion: ${{steps.gitversion.outputs.informationalVersion}}
 
     - name: Add private GitHub registry to NuGet
       run: nuget sources add -name "GPR" -Source https://nuget.pkg.github.com/dustinchilson/index.json -Username dustinchilson -Password ${{ secrets.GITHUB_TOKEN }}
 
     - name: Push generated package to GitHub registry
-      run: nuget push ./artifacts/NLog.Targets.GraylogHttp.${{ env.GIT_VERSION }}.nupkg -Source "GPR" -SkipDuplicate
+      run: nuget push ./artifacts/NLog.Targets.GraylogHttp.${{steps.gitversion.outputs.fullSemVer}}.nupkg -Source "GPR" -SkipDuplicate
 
     - name: Push generated package to nuget.org
-      if: steps.extract_branch.outputs.branch == 'master'
-      run: nuget push ./artifacts/NLog.Targets.GraylogHttp.${{ env.GIT_VERSION }}.nupkg -ApiKey ${{ secrets.NUGET_ORG_API_KEY }} -Source https://api.nuget.org/v3/index.json
+      if: steps.extract_branch.outputs.branch == 'main'
+      run: nuget push ./artifacts/NLog.Targets.GraylogHttp.${{steps.gitversion.outputs.fullSemVer}}.nupkg -ApiKey ${{secrets.NUGET_ORG_API_KEY}} -Source https://api.nuget.org/v3/index.json
 
     - name: Create Release
-      if: steps.extract_branch.outputs.branch == 'master'
+      if: steps.extract_branch.outputs.branch == 'main'
       id: create_release
       uses: actions/create-release@master
       env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
       with:
-        tag_name: v${{ env.GIT_VERSION }}
-        release_name: Release v${{ env.GIT_VERSION }}
+        tag_name: v${{steps.gitversion.outputs.fullSemVer}}
+        release_name: Release v${{steps.gitversion.outputs.fullSemVer}}
         draft: false
         prerelease: false
-
-    - name: Upload Test Results
-      if: steps.extract_branch.outputs.branch == 'master'
-      id: upload-test-results
-      uses: actions/upload-release-asset@master
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ./artifacts/TestResults.xml
-        asset_name: TestResults.xml
-        asset_content_type: application/xml
-
-    - name: Upload Nuget Package
-      if: steps.extract_branch.outputs.branch == 'master'
-      id: upload-nuget-package
-      uses: actions/upload-release-asset@master
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ./artifacts/NLog.Targets.GraylogHttp.${{ env.GIT_VERSION }}.nupkg
-        asset_name: NLog.Targets.GraylogHttp.${{ env.GIT_VERSION }}.nupkg
-        asset_content_type: application/xml
+        body: https://www.nuget.org/packages/NLog.Targets.GraylogHttp/${{steps.gitversion.outputs.fullSemVer}}
