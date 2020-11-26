@@ -39,20 +39,25 @@ jobs:
       run: nuget sources add -name "GPR" -Source https://nuget.pkg.github.com/dustinchilson/index.json -Username dustinchilson -Password ${{ secrets.GITHUB_TOKEN }}
 
     - name: Push generated package to GitHub registry
-      run: nuget push ./NLog.Targets.GraylogHttp/artifacts/*.nupkg -Source "GPR" -SkipDuplicate
+      env:
+        version: ${{env.GIT_VERSION}}
+      run: nuget push ./artifacts/NLog.Targets.GraylogHttp.$version.nupkg -Source "GPR" -SkipDuplicate
 
     - name: Push generated package to nuget.org
       if: steps.extract_branch.outputs.branch == 'main'
-      run: nuget push ./NLog.Targets.GraylogHttp/artifacts/*.nupkg -ApiKey ${{ secrets.NUGET_ORG_API_KEY }} -Source https://api.nuget.org/v3/index.json
+      env:
+        version: ${{env.GIT_VERSION}}
+      run: nuget push ./artifacts/NLog.Targets.GraylogHttp.$version.nupkg -ApiKey ${{ secrets.NUGET_ORG_API_KEY }} -Source https://api.nuget.org/v3/index.json
 
     - name: Create Release
       if: steps.extract_branch.outputs.branch == 'main'
       id: create_release
       uses: actions/create-release@master
       env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
       with:
-        tag_name: v${{ env.GIT_VERSION }}
-        release_name: Release v${{ env.GIT_VERSION }}
+        tag_name: v${{env.GIT_VERSION}}
+        release_name: Release v${{env.GIT_VERSION}}
         draft: false
         prerelease: false
+        body: https://www.nuget.org/packages/NLog.Targets.GraylogHttp/${{env.GIT_VERSION}}
