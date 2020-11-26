@@ -40,7 +40,7 @@ jobs:
 
     - name: Run the Cake script
       id: cake
-      uses: cake-build/cake-action@v1
+      uses: cake-build/cake-action@master
       with:
         cake-bootstrap: true
         verbosity: Diagnostic
