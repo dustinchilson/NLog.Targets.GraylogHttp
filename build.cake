@@ -1,7 +1,5 @@
 #tool "nuget:?package=GitVersion.CommandLine&version=5.5.1"
-#addin "Cake.FileHelpers&version=3.3.0"
-#addin "nuget:?package=Cake.Json&version=4.0.0"
-#addin "nuget:?package=Newtonsoft.Json&version=11.0.2"
+#addin "nuget:?Cake.FileHelpers&version=3.3.0"
 
 // ARGUMENTS
 var target = Argument("target", "Default");
@@ -35,9 +33,10 @@ Task("Restore")
 
 Task("Version")
     .Does(() => {
-        GitVersion versionInfo = GitVersion();
-
-        FileWriteText(new FilePath("$GITHUB_ENV"), $"GIT_VERSION={versionInfo.FullSemVer}");
+        GitVersion versionInfo = GitVersion(new GitVersionSettings(){
+            OutputType = GitVersionOutput.BuildServer,
+            Verbosity = GitVersionVerbosity.Error
+        });
 
         msBuildSettings.Properties.Add("PackageVersion", new List<string> { versionInfo.FullSemVer });
         msBuildSettings.Properties.Add("Version", new List<string> { versionInfo.AssemblySemVer });

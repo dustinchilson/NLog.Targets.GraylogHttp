@@ -12,7 +12,6 @@ jobs:
     if: "! contains(toJSON(github.event.commits.*.message), '[skip-ci]')"
     
     steps:
-
     - name: Checkout
       uses: actions/checkout@master
       with:
@@ -39,15 +38,11 @@ jobs:
       run: nuget sources add -name "GPR" -Source https://nuget.pkg.github.com/dustinchilson/index.json -Username dustinchilson -Password ${{ secrets.GITHUB_TOKEN }}
 
     - name: Push generated package to GitHub registry
-      env:
-        version: ${{env.GIT_VERSION}}
-      run: nuget push ./artifacts/NLog.Targets.GraylogHttp.$version.nupkg -Source "GPR" -SkipDuplicate
+      run: nuget push ./artifacts/NLog.Targets.GraylogHttp.${{env.GIT_VERSION}}.nupkg -Source "GPR" -SkipDuplicate
 
     - name: Push generated package to nuget.org
       if: steps.extract_branch.outputs.branch == 'main'
-      env:
-        version: ${{env.GIT_VERSION}}
-      run: nuget push ./artifacts/NLog.Targets.GraylogHttp.$version.nupkg -ApiKey ${{ secrets.NUGET_ORG_API_KEY }} -Source https://api.nuget.org/v3/index.json
+      run: nuget push ./artifacts/NLog.Targets.GraylogHttp.${{env.GIT_VERSION}}.nupkg -ApiKey ${{ secrets.NUGET_ORG_API_KEY }} -Source https://api.nuget.org/v3/index.json
 
     - name: Create Release
       if: steps.extract_branch.outputs.branch == 'main'
