@@ -16,9 +16,9 @@ This library is packaged as a nuget package available [here](https://www.nuget.o
 Install-Package NLog.Targets.GraylogHttp
 ```
 
-## NetStandard, .Net Core 2.1-3.0, .Net Framework 4.5
+## NetStandard, .Net Core 2.1-5.0, .Net Framework 4.5
 
-This library runs under netstandard 1.3 and fully supports both .Net Core 2.1-3.0 and .Net Framework 4.5
+This library runs under netstandard 1.3 and fully supports .Net Core 2.1-3.1, .Net 5.0, and .Net Framework 4.5+
 
 ## Usage
 

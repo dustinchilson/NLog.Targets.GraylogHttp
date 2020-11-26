@@ -1,11 +1,11 @@
-#addin "nuget:?package=Cake.Json&version=4.0.0"
-#addin "nuget:?package=Newtonsoft.Json&version=11.0.2"
-
 // ARGUMENTS
 var target = Argument("target", "Default");
 var configuration = Argument("configuration", "Release");
-var platform = Argument("platform", "Any CPU");
 var skipTests = Argument("SkipTests", false);
+
+var fullSemVer = Argument("fullSemVer", "0.0.1");
+var assemblySemVer = Argument("assemblySemVer", "0.0.1");
+var informationalVersion = Argument("informationalVersion", "0.0.1");
 
 // Variables
 var artifactsDirectory = Directory("./artifacts");
@@ -16,11 +16,11 @@ var msBuildSettings = new DotNetCoreMSBuildSettings
     MaxCpuCount = 1
 };
 
-GitVersion versionInfo = null;
-
-//////////////////////////////////////////////////////////////////////
-// PREPARATION
-//////////////////////////////////////////////////////////////////////
+msBuildSettings.Properties.Add("PackageVersion", new List<string> { fullSemVer });
+msBuildSettings.Properties.Add("Version", new List<string> { assemblySemVer });
+msBuildSettings.Properties.Add("FileVersion", new List<string> { assemblySemVer });
+msBuildSettings.Properties.Add("AssemblyVersion", new List<string> { assemblySemVer });
+msBuildSettings.Properties.Add("AssemblyInformationalVersion", new List<string> { informationalVersion });
 
 // Define directories.
 var buildDir = Directory("./build/bin") + Directory(configuration);
@@ -38,39 +38,8 @@ Task("Restore")
         DotNetCoreRestore(solutionFile);
     });
 
-Task("Version")
-    .Does(() => {
-        // dotnet tool install --global GitVersion.Tool --version 5.1.2
-        DotNetCoreTool("tool",
-            new DotNetCoreToolSettings {
-                ArgumentCustomization = args => args.Append("restore")
-            });
-
-        // dotnet gitversion /output json
-        IEnumerable<string> redirectedStandardOutput;
-        StartProcess(
-            "dotnet",
-            new ProcessSettings {
-                Arguments = "dotnet-gitversion /output json",
-                RedirectStandardOutput = true
-            },
-            out redirectedStandardOutput
-        );
-
-        versionInfo = DeserializeJson<GitVersion>(string.Join(Environment.NewLine, redirectedStandardOutput));
-
-        Information($"::set-env name=GIT_VERSION::{versionInfo.FullSemVer}");
-
-        msBuildSettings.Properties.Add("PackageVersion", new List<string> { versionInfo.FullSemVer });
-        msBuildSettings.Properties.Add("Version", new List<string> { versionInfo.AssemblySemVer });
-        msBuildSettings.Properties.Add("FileVersion", new List<string> { versionInfo.AssemblySemVer });
-        msBuildSettings.Properties.Add("AssemblyVersion", new List<string> { versionInfo.AssemblySemVer });
-        msBuildSettings.Properties.Add("AssemblyInformationalVersion", new List<string> { versionInfo.InformationalVersion });
-    });
-
 Task("Build")
     .IsDependentOn("Restore")
-    .IsDependentOn("Version")
     .Does(() =>
     {
         var path = MakeAbsolute(new DirectoryPath(solutionFile));
