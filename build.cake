@@ -1,10 +1,11 @@
-#tool "nuget:?package=GitVersion.CommandLine&version=5.5.1"
-#addin "nuget:?Cake.FileHelpers&version=3.3.0"
-
 // ARGUMENTS
 var target = Argument("target", "Default");
 var configuration = Argument("configuration", "Release");
 var skipTests = Argument("SkipTests", false);
+
+var fullSemVer = Argument("fullSemVer", "0.0.1");
+var assemblySemVer = Argument("assemblySemVer", "0.0.1");
+var informationalVersion = Argument("informationalVersion", "0.0.1");
 
 // Variables
 var artifactsDirectory = Directory("./artifacts");
@@ -14,6 +15,12 @@ var msBuildSettings = new DotNetCoreMSBuildSettings
 {
     MaxCpuCount = 1
 };
+
+msBuildSettings.Properties.Add("PackageVersion", new List<string> { fullSemVer });
+msBuildSettings.Properties.Add("Version", new List<string> { assemblySemVer });
+msBuildSettings.Properties.Add("FileVersion", new List<string> { assemblySemVer });
+msBuildSettings.Properties.Add("AssemblyVersion", new List<string> { assemblySemVer });
+msBuildSettings.Properties.Add("AssemblyInformationalVersion", new List<string> { informationalVersion });
 
 // Define directories.
 var buildDir = Directory("./build/bin") + Directory(configuration);
@@ -31,23 +38,8 @@ Task("Restore")
         DotNetCoreRestore(solutionFile);
     });
 
-Task("Version")
-    .Does(() => {
-        GitVersion versionInfo = GitVersion(new GitVersionSettings(){
-            OutputType = GitVersionOutput.BuildServer,
-            Verbosity = GitVersionVerbosity.Error
-        });
-
-        msBuildSettings.Properties.Add("PackageVersion", new List<string> { versionInfo.FullSemVer });
-        msBuildSettings.Properties.Add("Version", new List<string> { versionInfo.AssemblySemVer });
-        msBuildSettings.Properties.Add("FileVersion", new List<string> { versionInfo.AssemblySemVer });
-        msBuildSettings.Properties.Add("AssemblyVersion", new List<string> { versionInfo.AssemblySemVer });
-        msBuildSettings.Properties.Add("AssemblyInformationalVersion", new List<string> { versionInfo.InformationalVersion });
-    });
-
 Task("Build")
     .IsDependentOn("Restore")
-    .IsDependentOn("Version")
     .Does(() =>
     {
         var path = MakeAbsolute(new DirectoryPath(solutionFile));
