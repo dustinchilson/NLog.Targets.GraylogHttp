@@ -1,22 +1,22 @@
 version: 2
 updates:
-- package-ecosystem: nuget
-  directory: "/"
-  schedule:
-    interval: "weekly"
-  open-pull-requests-limit: 10
-  assignees:
-      - "dustinchilson"
+  - package-ecosystem: nuget
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    open-pull-requests-limit: 10
+    assignees:
+        - "dustinchilson"
     reviewers:
       - "dustinchilson"
     labels:
       - "nuget"
       - "dependencies"
-  ignore:
-  - dependency-name: NLog
-    versions:
-    - "> 4.5.11"
-- package-ecosystem: "github-actions"
+    ignore:
+    - dependency-name: NLog
+      versions:
+      - "> 4.5.11"
+  - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
       interval: "weekly"
