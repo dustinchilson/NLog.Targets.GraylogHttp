@@ -10,8 +10,8 @@ namespace NLog.Targets.GraylogHttp
         private static readonly DateTime _epochTime = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
         private string StructuredLoggingParameterName;
 
-        public void GraylogMessageBuilder(string structuredLoggingParameterName)
-        { StructuredLoggingParameterName = structuredLoggingParameterName  }
+        public  GraylogMessageBuilder(string structuredLoggingParameterName)
+        { StructuredLoggingParameterName = structuredLoggingParameterName; }
 
         public GraylogMessageBuilder WithLevel(LogLevel level)
         {
