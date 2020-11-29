@@ -8,10 +8,10 @@ namespace NLog.Targets.GraylogHttp
         private const string NLogLogLevelPropertyName = "nlog_level_name";
         private readonly JsonObject _graylogMessage = new JsonObject();
         private static readonly DateTime _epochTime = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
-        private string StructuredLoggingParameterName;
+        private string _structuredLoggingParameterName;
 
-        public  GraylogMessageBuilder(string structuredLoggingParameterName)
-        { StructuredLoggingParameterName = structuredLoggingParameterName; }
+        public GraylogMessageBuilder(string structuredLoggingParameterName)
+        { _structuredLoggingParameterName = structuredLoggingParameterName; }
 
         public GraylogMessageBuilder WithLevel(LogLevel level)
         {
@@ -69,16 +69,15 @@ namespace NLog.Targets.GraylogHttp
             if (!propertyName.StartsWith("_", StringComparison.Ordinal))
                 propertyName = string.Concat("_", propertyName);
 
-            if (StructuredLoggingParameterName != null && propertyName == string.Concat("_", StructuredLoggingParameterName))
+            if (_structuredLoggingParameterName != null && propertyName == string.Concat("_", _structuredLoggingParameterName))
             { return StructuredLogging(value.ToString()); }
             else
             { return WithProperty(propertyName, value); }
-
         }
 
         private GraylogMessageBuilder StructuredLogging(string value)
         {
-            if (string.IsNullOrEmpty(value)) {return this;}
+            if (string.IsNullOrEmpty(value)) { return this; }
 
             var split = value.Split(new string[] { ", " }, StringSplitOptions.None);
 
@@ -90,6 +89,7 @@ namespace NLog.Targets.GraylogHttp
                     WithCustomProperty(kvPairs[0].Replace(" ", string.Empty), kvPairs[1]);
                 }
             }
+
             return this;
         }
 
