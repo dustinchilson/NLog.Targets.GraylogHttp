@@ -45,6 +45,8 @@ namespace NLog.Targets.GraylogHttp
 
         public int FailureCooldownSeconds { get; set; } = 30;
 
+        public string StructuredLoggingParameterName { get; set; }
+
         /// <summary>
         /// Send the NLog log level name as a custom field (default true).
         /// </summary>
@@ -91,7 +93,7 @@ namespace NLog.Targets.GraylogHttp
             if (logEvent == null)
                 return;
 
-            GraylogMessageBuilder messageBuilder = new GraylogMessageBuilder()
+            GraylogMessageBuilder messageBuilder = new GraylogMessageBuilder(StructuredLoggingParameterName)
                 .WithProperty("short_message", logEvent.FormattedMessage)
                 .WithProperty("host", Host)
                 .WithLevel(logEvent.Level)
