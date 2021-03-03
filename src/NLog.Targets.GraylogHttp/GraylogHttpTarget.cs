@@ -7,6 +7,7 @@ using NLog.Common;
 using NLog.Config;
 using Polly;
 using Polly.CircuitBreaker;
+using Polly.Wrap;
 
 namespace NLog.Targets.GraylogHttp
 {
@@ -15,7 +16,7 @@ namespace NLog.Targets.GraylogHttp
     {
         private HttpClient _httpClient;
         private Uri _requestAddress;
-        private CircuitBreakerPolicy _policy;
+        private PolicyWrap _policy;
 
         public GraylogHttpTarget()
         {
@@ -68,13 +69,27 @@ namespace NLog.Targets.GraylogHttp
 
             _httpClient.DefaultRequestHeaders.ExpectContinue = false; // Expect (100) Continue breaks the graylog server
 
-            _policy = Policy
-                .Handle<Exception>()
+            var waitAndRetryPolicy = Policy
+                .Handle<Exception>(e => !(e is BrokenCircuitException))
+                .WaitAndRetry(
+                    1,
+                    attempt => TimeSpan.FromMilliseconds(200),
+                    (exception, calculatedWaitDuration) =>
+                    {
+                        InternalLogger.Error(exception, "GraylogHttp(Name={0}): Graylog server error, the log messages were not sent to the server.", Name);
+                    });
+
+            var circuitBreakerPolicy = Policy
+                .Handle<Exception>(e => !(e is BrokenCircuitException))
                 .AdvancedCircuitBreaker(
                     (double)FailureThreshold / 100,
                     TimeSpan.FromSeconds(SamplingDurationSeconds),
                     MinimumThroughput,
-                    TimeSpan.FromSeconds(FailureCooldownSeconds));
+                    TimeSpan.FromSeconds(FailureCooldownSeconds),
+                    (exception, span) => InternalLogger.Error(exception, "GraylogHttp(Name={0}): Circuit breaker Open", Name),
+                    () => InternalLogger.Info("GraylogHttp(Name={0}): Circuit breaker Reset", Name));
+
+            _policy = Policy.Wrap(waitAndRetryPolicy, circuitBreakerPolicy);
 
             // Prefix the custom properties with underscore upfront, so we don't have to do it for each log-event
             foreach (TargetPropertyWithContext p in ContextProperties)
@@ -137,7 +152,7 @@ namespace NLog.Targets.GraylogHttp
 
             try
             {
-                _policy.Execute(() =>
+                _policy.ExecuteAndCapture(() =>
                 {
                     var content = new StringContent(messageBuilder.Render(logEvent.TimeStamp), Encoding.UTF8, "application/json");
                     return _httpClient.PostAsync(_requestAddress, content).Result.EnsureSuccessStatusCode();
@@ -147,6 +162,15 @@ namespace NLog.Targets.GraylogHttp
             {
                 InternalLogger.Error(
                     "GraylogHttp(Name={0}): The Graylog server seems to be inaccessible, the log messages were not sent to the server.",
+                    Name);
+            }
+#pragma warning disable CA1031 // Do not catch general exception types
+            catch (Exception ex)
+#pragma warning restore CA1031 // Do not catch general exception types
+            {
+                InternalLogger.Error(
+                    ex,
+                    "GraylogHttp(Name={0}): Graylog server error, the log messages were not sent to the server.",
                     Name);
             }
         }
