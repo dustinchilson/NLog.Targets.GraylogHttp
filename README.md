@@ -34,7 +34,7 @@ Add or modify your NLog Configuration to add the new target and Extension Assemb
               xsi:type="GraylogHttp"
               facility="[FACILITY]"
               graylogServer="[SERVER]"
-              graylogPort="[PORT]">
+              graylogPort="[PORT]" />
         <!-- Location information. -->
         <parameter name="source_method" layout="${callsite}" />
         <parameter name="source_line" layout="${callsite-linenumber}" />
