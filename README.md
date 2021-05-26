@@ -51,6 +51,8 @@ Add or modify your NLog Configuration to add the new target and Extension Assemb
 - *graylogServer* - REQUIRED - URI formatted address of your server (e.g. http://192.168.1.2, http://example.com, https://graylog.example.com:3030)
 - *graylogPort* - OPTIONAL - server port, normally specified by Input in Graylog, Can also be specified in the server
 - *facility* - OPTIONAL - variable could be used to identify your application, library, etc.
+- *useHttpClientFactory* - OPTIONAL, only .NET Standard 2.0 - use IHttpClientFactory (loaded with ConfigurationItemFactory.Default.CreateInstance)
+- *httpClientName* - OPTIONAL, only .NET Standard 2.0 - provide a named HttpClient (requires *useHttpClientFactory* true)
 
 ### Simple Logging
 
@@ -70,6 +72,15 @@ var logger = LogManager.GetCurrentClassLogger();
 var e = new LogEventInfo(LogLevel.Fatal, "Test", "Test Message");
 e.Properties["test_prop"] = "test property";
 logger.Log(e);
+```
+
+### Use IHttpClientFactory from your IServiceProvider
+```
+var nlogCreateInstance = NLog.Config.ConfigurationItemFactory.Default.CreateInstance;
+NLog.Config.ConfigurationItemFactory.Default.CreateInstance = (type) =>
+{
+    return myServiceProvider.GetService(type) ?? nlogCreateInstance(type);
+};
 ```
 
 ## Note

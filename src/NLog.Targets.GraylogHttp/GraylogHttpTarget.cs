@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
 using System.Text;
+using System.Threading.Tasks;
 using NLog.Common;
 using NLog.Config;
 using Polly;
@@ -16,7 +17,7 @@ namespace NLog.Targets.GraylogHttp
     {
         private HttpClient _httpClient;
         private Uri _requestAddress;
-        private PolicyWrap _policy;
+        private AsyncPolicyWrap _policy;
 
         public GraylogHttpTarget()
         {
@@ -51,6 +52,18 @@ namespace NLog.Targets.GraylogHttp
         /// </summary>
         public bool AddNLogLevelName { get; set; } = true;
 
+#if NETSTANDARD2_0
+        /// <summary>
+        /// Use IHttpClientFactory (loaded with <see cref="ConfigurationItemFactory.Default.CreateInstance"/>, default false).
+        /// </summary>
+        public bool UseHttpClientFactory { get; set; }
+
+        /// <summary>
+        /// A named HttpClient from to be used with IHttpClientFactory.
+        /// </summary>
+        public string HttpClientName { get; set; }
+#endif
+
         [ArrayParameter(typeof(TargetPropertyWithContext), "parameter")]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1721:PropertyNamesShouldNotMatchGetMethods", Justification = "NLog Behavior")]
         public override IList<TargetPropertyWithContext> ContextProperties { get; }
@@ -60,18 +73,14 @@ namespace NLog.Targets.GraylogHttp
             if (string.IsNullOrEmpty(Host))
                 Host = GetMachineName();
 
-            _httpClient = new HttpClient();
-
             _requestAddress = new Uri(string.Format(System.Globalization.CultureInfo.InvariantCulture, "{0}/gelf", GraylogServer));
 
             if (!string.IsNullOrEmpty(GraylogPort))
                 _requestAddress = new Uri(string.Format(System.Globalization.CultureInfo.InvariantCulture, "{0}:{1}/gelf", GraylogServer, GraylogPort));
 
-            _httpClient.DefaultRequestHeaders.ExpectContinue = false; // Expect (100) Continue breaks the graylog server
-
             var waitAndRetryPolicy = Policy
                 .Handle<Exception>(e => !(e is BrokenCircuitException))
-                .WaitAndRetry(
+                .WaitAndRetryAsync(
                     1,
                     attempt => TimeSpan.FromMilliseconds(200),
                     (exception, calculatedWaitDuration) =>
@@ -81,7 +90,7 @@ namespace NLog.Targets.GraylogHttp
 
             var circuitBreakerPolicy = Policy
                 .Handle<Exception>(e => !(e is BrokenCircuitException))
-                .AdvancedCircuitBreaker(
+                .AdvancedCircuitBreakerAsync(
                     (double)FailureThreshold / 100,
                     TimeSpan.FromSeconds(SamplingDurationSeconds),
                     MinimumThroughput,
@@ -89,7 +98,7 @@ namespace NLog.Targets.GraylogHttp
                     (exception, span) => InternalLogger.Error(exception, "GraylogHttp(Name={0}): Circuit breaker Open", Name),
                     () => InternalLogger.Info("GraylogHttp(Name={0}): Circuit breaker Reset", Name));
 
-            _policy = Policy.Wrap(waitAndRetryPolicy, circuitBreakerPolicy);
+            _policy = Policy.WrapAsync(waitAndRetryPolicy, circuitBreakerPolicy);
 
             // Prefix the custom properties with underscore upfront, so we don't have to do it for each log-event
             foreach (TargetPropertyWithContext p in ContextProperties)
@@ -105,6 +114,13 @@ namespace NLog.Targets.GraylogHttp
         {
             if (logEvent == null)
                 return;
+
+#if NETSTANDARD2_0
+            // Filter out internal logs from own HttpClient
+            if (UseHttpClientFactory
+                && logEvent.LoggerName.StartsWith("System.Net.Http.HttpClient." + HttpClientName, StringComparison.Ordinal))
+                return;
+#endif
 
             GraylogMessageBuilder messageBuilder = new GraylogMessageBuilder()
                 .WithProperty("short_message", logEvent.FormattedMessage)
@@ -150,12 +166,18 @@ namespace NLog.Targets.GraylogHttp
                     messageBuilder.WithCustomProperty("_exception_stack_trace", logEvent.Exception.StackTrace);
             }
 
+            if (_httpClient == null)
+                InitHttpClient();
+
             try
             {
-                _policy.ExecuteAndCapture(() =>
+                _policy.ExecuteAndCaptureAsync(async () =>
                 {
-                    var content = new StringContent(messageBuilder.Render(logEvent.TimeStamp), Encoding.UTF8, "application/json");
-                    return _httpClient.PostAsync(_requestAddress, content).Result.EnsureSuccessStatusCode();
+                    using var content = new StringContent(messageBuilder.Render(logEvent.TimeStamp), Encoding.UTF8, "application/json");
+                    var postTask = _httpClient.PostAsync(_requestAddress, content);
+                    var result = await postTask.ConfigureAwait(false);
+                    result.EnsureSuccessStatusCode();
+                    return result;
                 });
             }
             catch (BrokenCircuitException)
@@ -173,6 +195,30 @@ namespace NLog.Targets.GraylogHttp
                     "GraylogHttp(Name={0}): Graylog server error, the log messages were not sent to the server.",
                     Name);
             }
+        }
+
+        private void InitHttpClient()
+        {
+#if NETSTANDARD2_0
+            if (UseHttpClientFactory)
+            {
+                try
+                {
+                    var factoryInstance = ConfigurationItemFactory.Default.CreateInstance(typeof(System.Net.Http.IHttpClientFactory));
+                    if (factoryInstance is IHttpClientFactory factory)
+                        _httpClient = HttpClientName == null ? factory.CreateClient() : factory.CreateClient(HttpClientName);
+                }
+                catch (NLogConfigurationException ex)
+                {
+                    InternalLogger.Error(ex, "GraylogHttp(Name={0}): IHttpClientFactory couldn't be obtained.", Name);
+                }
+            }
+#endif
+            // Fallback to regular HttpClient
+            if (_httpClient == null)
+                _httpClient = new HttpClient();
+
+            _httpClient.DefaultRequestHeaders.ExpectContinue = false; // Expect (100) Continue breaks the graylog server
         }
 
         /// <summary>
