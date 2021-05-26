@@ -17,7 +17,7 @@ namespace NLog.Targets.GraylogHttp
     {
         private HttpClient _httpClient;
         private Uri _requestAddress;
-        private PolicyWrap _policy;
+        private AsyncPolicyWrap _policy;
 
         public GraylogHttpTarget()
         {
@@ -56,7 +56,7 @@ namespace NLog.Targets.GraylogHttp
         /// <summary>
         /// Use IHttpClientFactory (loaded with <see cref="ConfigurationItemFactory.Default.CreateInstance"/>, default false).
         /// </summary>
-        public bool UseHttpClientFactory { get; set; } = false;
+        public bool UseHttpClientFactory { get; set; }
 
         /// <summary>
         /// A named HttpClient from to be used with IHttpClientFactory.
@@ -78,11 +78,9 @@ namespace NLog.Targets.GraylogHttp
             if (!string.IsNullOrEmpty(GraylogPort))
                 _requestAddress = new Uri(string.Format(System.Globalization.CultureInfo.InvariantCulture, "{0}:{1}/gelf", GraylogServer, GraylogPort));
 
-            _httpClient.DefaultRequestHeaders.ExpectContinue = false; // Expect (100) Continue breaks the graylog server
-
             var waitAndRetryPolicy = Policy
                 .Handle<Exception>(e => !(e is BrokenCircuitException))
-                .WaitAndRetry(
+                .WaitAndRetryAsync(
                     1,
                     attempt => TimeSpan.FromMilliseconds(200),
                     (exception, calculatedWaitDuration) =>
@@ -100,7 +98,7 @@ namespace NLog.Targets.GraylogHttp
                     (exception, span) => InternalLogger.Error(exception, "GraylogHttp(Name={0}): Circuit breaker Open", Name),
                     () => InternalLogger.Info("GraylogHttp(Name={0}): Circuit breaker Reset", Name));
 
-            _policy = Policy.Wrap(waitAndRetryPolicy, circuitBreakerPolicy);
+            _policy = Policy.WrapAsync(waitAndRetryPolicy, circuitBreakerPolicy);
 
             // Prefix the custom properties with underscore upfront, so we don't have to do it for each log-event
             foreach (TargetPropertyWithContext p in ContextProperties)
@@ -120,7 +118,7 @@ namespace NLog.Targets.GraylogHttp
 #if NETSTANDARD2_0
             // Filter out internal logs from own HttpClient
             if (UseHttpClientFactory
-                && logEvent.LoggerName.StartsWith("System.Net.Http.HttpClient." + HttpClientName))
+                && logEvent.LoggerName.StartsWith("System.Net.Http.HttpClient." + HttpClientName, StringComparison.Ordinal))
                 return;
 #endif
 
@@ -173,8 +171,7 @@ namespace NLog.Targets.GraylogHttp
 
             try
             {
-                _policy.ExecuteAndCapture(() =>
-                _policy.ExecuteAsync(async () =>
+                _policy.ExecuteAndCaptureAsync(async () =>
                 {
                     using var content = new StringContent(messageBuilder.Render(logEvent.TimeStamp), Encoding.UTF8, "application/json");
                     var postTask = _httpClient.PostAsync(_requestAddress, content);
