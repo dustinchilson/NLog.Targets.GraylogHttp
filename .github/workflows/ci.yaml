@@ -23,13 +23,13 @@ jobs:
       run: Write-Host ([string]::Format("##[set-output name=branch;]{0}", $env:GITHUB_REF.Replace("refs/heads/", "")))
     
     - name: Install GitVersion
-      uses: gittools/actions/gitversion/setup@v0.9.7
+      uses: gittools/actions/gitversion/setup@v0.9.15
       with:
         versionSpec: '5.5.1'
 
     - name: Determine Version
       id:   gitversion
-      uses: gittools/actions/gitversion/execute@v0.9.7
+      uses: gittools/actions/gitversion/execute@v0.9.15
       with:
         useConfigFile: true
 
