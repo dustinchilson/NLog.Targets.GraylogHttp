@@ -42,6 +42,7 @@ jobs:
       id: cake
       uses: cake-build/cake-action@master
       with:
+        cake-version: tool-manifest
         cake-bootstrap: true
         verbosity: Diagnostic
         arguments: |
